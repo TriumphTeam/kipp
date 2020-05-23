@@ -19,7 +19,7 @@ class Config {
     }
 
     /**
-     * Gets the config property
+     * Sets the config property
      */
     operator fun <T> set(property: Property<T>, value: T) {
         settingsManager.setProperty(property, value)

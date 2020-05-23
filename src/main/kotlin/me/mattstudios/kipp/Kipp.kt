@@ -1,8 +1,11 @@
 package me.mattstudios.kipp
 
 import me.mattstudios.kipp.commands.admin.Purge
+import me.mattstudios.kipp.commands.admin.database.InsertAll
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
+import me.mattstudios.kipp.data.Cache
+import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
@@ -10,6 +13,7 @@ import me.mattstudios.mfjda.base.CommandManager
 import me.mattstudios.mfjda.base.components.TypeResult
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 
@@ -18,23 +22,40 @@ import org.slf4j.LoggerFactory
  */
 class Kipp {
 
-    private val config = Config()
-    private val logger = LoggerFactory.getLogger(Kipp::class.java)
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(Kipp::class.java)
+    }
 
+    // Creates the config and the logger
+    private val config = Config()
+
+    // Database handler
+    private val database = Database(config)
+
+    // Cache that holds important values
+    private val cache = Cache(config)
+
+    // Creates JDA object and starts the bot
     private val jda = JDABuilder
             .createLight(config[Setting.TOKEN],
-                    listOf(
-                            GatewayIntent.GUILD_EMOJIS,
-                            GatewayIntent.GUILD_BANS,
-                            GatewayIntent.GUILD_MESSAGES,
-                            GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                            GatewayIntent.GUILD_MEMBERS,
-                            GatewayIntent.GUILD_INVITES
-                    ))
+                         listOf(
+                                 GatewayIntent.GUILD_EMOJIS,
+                                 GatewayIntent.GUILD_BANS,
+                                 GatewayIntent.GUILD_MESSAGES,
+                                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                                 GatewayIntent.GUILD_MESSAGE_TYPING,
+                                 GatewayIntent.GUILD_MEMBERS,
+                                 GatewayIntent.GUILD_INVITES
+                         ))
+            .addEventListeners(cache)
             .build()
 
+    // The command manager
     private val commandManager = CommandManager(jda)
 
+    /**
+     * Calls all the registers
+     */
     init {
         registerListeners()
         registerParameters()
@@ -70,6 +91,8 @@ class Kipp {
         listOf(
                 Purge(),
 
+                InsertAll(database),
+
                 SetJoinChannel(config),
                 SetDefaultRole(config)
         ).forEach(commandManager::register)
@@ -89,7 +112,7 @@ class Kipp {
      */
     private fun registerListeners() {
         listOf(
-                JoinListener(jda, config)
+                JoinListener(config, cache, database)
         ).forEach { jda.addEventListener(it) }
     }
 

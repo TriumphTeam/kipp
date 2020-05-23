@@ -15,4 +15,16 @@ object Setting : SettingsHolder {
     @JvmField
     val DEFAULT_ROLE: Property<String> = newProperty("default-role", "0")
 
+    @JvmField
+    val SQL_HOST: Property<String> = newProperty("database.host", "localhost")
+
+    @JvmField
+    val SQL_USER: Property<String> = newProperty("database.user", "matt")
+
+    @JvmField
+    val SQL_PASSWORD: Property<String> = newProperty("database.password", "bleh")
+
+    @JvmField
+    val SQL_DATABASE: Property<String> = newProperty("database.database", "matt")
+
 }
