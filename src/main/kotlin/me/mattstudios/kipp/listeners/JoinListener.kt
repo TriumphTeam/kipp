@@ -40,7 +40,7 @@ class JoinListener(
         val invite = getInvite(guild)
         val today = LocalDateTime.now()
 
-        val role = guild.getRoleById(config[Setting.DEFAULT_ROLE])
+        val role = guild.getRoleById(config[Setting.MEMBER_ROLE])
         if (role != null) guild.addRoleToMember(member, role).queue()
 
         val message = EmbedBuilder().setTitle("Member joined!")

@@ -13,15 +13,18 @@ import me.mattstudios.mfjda.base.CommandBase
  * @author Matt
  */
 @Prefix("!")
-@Command("setdefaultrole")
+@Command("setrole")
 class SetDefaultRole(private val config: Config) : CommandBase() {
 
     @Default
     @Delete
     @Requirement("#admin-up")
-    fun setJoinChannel(roleId: String?) {
-        if (roleId == null) return
-        config[Setting.DEFAULT_ROLE] = roleId
+    fun setJoinChannel(role: String, roleId: String) {
+        when (role.toLowerCase()) {
+            "member" -> config[Setting.MEMBER_ROLE] = roleId
+            "plugins" -> config[Setting.PLUGINS_ROLE] = roleId
+            "pings" -> config[Setting.PINGS_ROLE] = roleId
+        }
     }
 
 }

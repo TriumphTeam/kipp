@@ -20,7 +20,7 @@ class SetJoinChannel(private val config: Config) : CommandBase() {
     @Delete
     @Requirement("#admin-up")
     fun setJoinChannel() {
-        config[Setting.JOIN_CHANNEL] = message.channel.id
+        config[Setting.JOIN_LOG_CHANNEL] = message.channel.id
     }
 
 }

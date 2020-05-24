@@ -1,18 +1,20 @@
 package me.mattstudios.kipp
 
 import me.mattstudios.kipp.commands.admin.Purge
-import me.mattstudios.kipp.commands.admin.database.InsertAll
+import me.mattstudios.kipp.commands.admin.database.UpdateDb
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
+import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.mfjda.base.CommandManager
 import me.mattstudios.mfjda.base.components.TypeResult
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
+import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -37,7 +39,7 @@ class Kipp {
 
     // Creates JDA object and starts the bot
     private val jda = JDABuilder
-            .createLight(config[Setting.TOKEN],
+            .create(config[Setting.TOKEN],
                          listOf(
                                  GatewayIntent.GUILD_EMOJIS,
                                  GatewayIntent.GUILD_BANS,
@@ -47,7 +49,8 @@ class Kipp {
                                  GatewayIntent.GUILD_MEMBERS,
                                  GatewayIntent.GUILD_INVITES
                          ))
-            .addEventListeners(cache)
+            .disableCache(listOf(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS))
+            .addEventListeners(cache, StatusListener())
             .build()
 
     // The command manager
@@ -91,7 +94,7 @@ class Kipp {
         listOf(
                 Purge(),
 
-                InsertAll(database),
+                UpdateDb(database),
 
                 SetJoinChannel(config),
                 SetDefaultRole(config)

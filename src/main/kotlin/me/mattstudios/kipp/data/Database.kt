@@ -5,9 +5,14 @@ import com.zaxxer.hikari.HikariDataSource
 import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.utils.Embed
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.MessageChannel
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
+import kotlin.system.measureTimeMillis
 
 
 /**
@@ -40,29 +45,45 @@ class Database(config: Config) {
         if (dataSource.isRunning) Kipp.logger.info("Connected to \"${config[Setting.SQL_DATABASE]}\" successfully")
     }
 
-    fun insertAll(guild: Guild) {
-        dataSource.connection.use { connection ->
-            guild.members.forEach { member ->
-                val preparedStatement = connection.prepareStatement("insert ignore into members values (?, ?, ?)")
+    fun insertAll(guild: Guild, channel: MessageChannel) {
+        val task = CompletableFuture.supplyAsync {
+            return@supplyAsync measureTimeMillis {
+                dataSource.connection.use { connection ->
+                    guild.members.forEach { member ->
+                        val preparedStatement = connection.prepareStatement("insert ignore into members values (?, ?, ?)")
 
-                preparedStatement.setLong(1, member.idLong)
-                preparedStatement.setString(2, "unknown")
-                preparedStatement.setString(3, "unknown")
+                        preparedStatement.setLong(1, member.idLong)
+                        preparedStatement.setString(2, "unknown")
+                        preparedStatement.setString(3, "unknown")
 
-                preparedStatement.executeUpdate()
+                        preparedStatement.executeUpdate()
+                    }
+                }
             }
+        }
+
+        task.thenAccept {
+            channel.sendMessage(
+                    Embed().field(
+                            "Updating database",
+                            "Successfully updated!" +
+                            "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(it)}s"
+                    ).build()
+            ).queue()
         }
     }
 
     fun insertMember(member: Member, invite: Invite?) {
-        dataSource.connection.use { connection ->
-            val preparedStatement = connection.prepareStatement("replace into members values (?, ?, ?)")
+        CompletableFuture.runAsync {
+            dataSource.connection.use { connection ->
+                val preparedStatement = connection.prepareStatement("replace into members values (?, ?, ?)")
 
-            preparedStatement.setLong(1, member.idLong)
-            preparedStatement.setString(2, invite?.code)
-            preparedStatement.setString(3, invite?.inviter?.name)
+                preparedStatement.setLong(1, member.idLong)
+                preparedStatement.setString(2, invite?.code)
+                preparedStatement.setString(3, invite?.inviter?.name)
 
-            preparedStatement.executeUpdate()
+                preparedStatement.executeUpdate()
+            }
         }
     }
 

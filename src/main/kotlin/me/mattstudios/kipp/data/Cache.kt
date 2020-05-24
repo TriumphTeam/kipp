@@ -21,7 +21,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
      */
     override fun onGuildReady(event: GuildReadyEvent) {
         val guild = event.guild
-        joinChannel = guild.getTextChannelById(config[Setting.JOIN_CHANNEL])
+        joinChannel = guild.getTextChannelById(config[Setting.JOIN_LOG_CHANNEL])
         invites = guild.retrieveInvites().complete()
     }
 

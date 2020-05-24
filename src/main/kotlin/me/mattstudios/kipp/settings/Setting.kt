@@ -10,10 +10,16 @@ object Setting : SettingsHolder {
     val TOKEN: Property<String> = newProperty("token", "none")
 
     @JvmField
-    val JOIN_CHANNEL: Property<String> = newProperty("join-channel", "0")
+    val JOIN_LOG_CHANNEL: Property<String> = newProperty("join-log-channel", "0")
 
     @JvmField
-    val DEFAULT_ROLE: Property<String> = newProperty("default-role", "0")
+    val MEMBER_ROLE: Property<String> = newProperty("member-role", "0")
+
+    @JvmField
+    val PLUGINS_ROLE: Property<String> = newProperty("plugins-role", "0")
+
+    @JvmField
+    val PINGS_ROLE: Property<String> = newProperty("pings-role", "0")
 
     @JvmField
     val SQL_HOST: Property<String> = newProperty("database.host", "localhost")
