@@ -3,6 +3,7 @@ package me.mattstudios.kipp.data
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import net.dv8tion.jda.api.entities.Invite
+import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent
@@ -14,6 +15,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 class Cache(private val config: Config) : ListenerAdapter() {
 
     var joinChannel: TextChannel? = null
+    var memberRole: Role? = null
+    var pluginsRole: Role? = null
+    var pingsRole: Role? = null
     var invites = mutableListOf<Invite>()
 
     /**
@@ -23,6 +27,11 @@ class Cache(private val config: Config) : ListenerAdapter() {
         val guild = event.guild
         joinChannel = guild.getTextChannelById(config[Setting.JOIN_LOG_CHANNEL])
         invites = guild.retrieveInvites().complete()
+
+        memberRole = guild.getRoleById(config[Setting.MEMBER_ROLE])
+        pluginsRole = guild.getRoleById(config[Setting.PLUGINS_ROLE])
+        pingsRole = guild.getRoleById(config[Setting.PINGS_ROLE])
+
     }
 
     /**

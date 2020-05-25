@@ -1,4 +1,4 @@
-package me.mattstudios.kipp.commands.admin.database
+package me.mattstudios.kipp.commands.admin.sync
 
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.utils.Embed

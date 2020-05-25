@@ -24,6 +24,11 @@ class Embed {
         return this
     }
 
+    fun footer(footer: String, icon: String): Embed {
+        embed.setFooter(footer, icon)
+        return this
+    }
+
     fun color(color: String): Embed {
         embed.setColor(Utils.hexToRgb(color))
         return this
@@ -32,6 +37,20 @@ class Embed {
     fun field(title: String, body: String): Embed {
         embed.addField(title, body, false)
         return this
+    }
+
+    fun field(title: String, body: String, inline: Boolean): Embed {
+        embed.addField(title, body, inline)
+        return this
+    }
+
+    fun thumbnail(url: String): Embed {
+        embed.setThumbnail(url)
+        return this
+    }
+
+    fun empty() {
+        embed.addBlankField(false)
     }
 
     fun build(): MessageEmbed {

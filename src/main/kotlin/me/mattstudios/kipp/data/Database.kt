@@ -45,6 +45,9 @@ class Database(config: Config) {
         if (dataSource.isRunning) Kipp.logger.info("Connected to \"${config[Setting.SQL_DATABASE]}\" successfully")
     }
 
+    /**
+     * Inserts all the members into the database
+     */
     fun insertAll(guild: Guild, channel: MessageChannel) {
         val task = CompletableFuture.supplyAsync {
             return@supplyAsync measureTimeMillis {
@@ -73,6 +76,9 @@ class Database(config: Config) {
         }
     }
 
+    /**
+     * Insert the new member
+     */
     fun insertMember(member: Member, invite: Invite?) {
         CompletableFuture.runAsync {
             dataSource.connection.use { connection ->
@@ -84,6 +90,23 @@ class Database(config: Config) {
 
                 preparedStatement.executeUpdate()
             }
+        }
+    }
+
+    fun getInvite(memberId: Long): KippInvite? {
+        return dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("select invite, invited_by from members where member_id = ?")
+            preparedStatement.setLong(1, memberId)
+
+            val resultSet = preparedStatement.executeQuery()
+
+            while (resultSet.next()) {
+                val invite = resultSet.getString("invite")
+                val inviter = resultSet.getString("invited_by")
+                return@use KippInvite(invite, inviter)
+            }
+
+            return@use null
         }
     }
 

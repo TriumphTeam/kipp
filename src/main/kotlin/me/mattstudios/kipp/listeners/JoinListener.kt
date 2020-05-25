@@ -3,8 +3,9 @@ package me.mattstudios.kipp.listeners
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.settings.Config
-import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.Utils
+import me.mattstudios.kipp.utils.Utils.setRoles
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Invite
@@ -40,16 +41,15 @@ class JoinListener(
         val invite = getInvite(guild)
         val today = LocalDateTime.now()
 
-        val role = guild.getRoleById(config[Setting.MEMBER_ROLE])
-        if (role != null) guild.addRoleToMember(member, role).queue()
+        setRoles(cache, guild, member)
 
-        val message = EmbedBuilder().setTitle("Member joined!")
-                .setThumbnail(user.avatarUrl)
-                .setColor(Utils.hexToRgb("#72d689"))
-                .addField(user.asTag, member.asMention, false)
-                .addField("Invite:", "`${invite?.code}` by `${invite?.inviter?.asTag}`", false)
-                .addField("Account age:", abs(ChronoUnit.DAYS.between(today, user.timeCreated)).toString(), false)
-                .setFooter(today.format(formatter))
+        val message = Embed().title("Member joined!")
+                .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
+                .color("#72d689")
+                .field(user.asTag, member.asMention)
+                .field("Invite:", "`${invite?.code}` by `${invite?.inviter?.asTag}`")
+                .field("Account age:", abs(ChronoUnit.DAYS.between(today, user.timeCreated)).toString())
+                .footer(today.format(formatter))
                 .build()
 
         channel.sendMessage(message).queue()
