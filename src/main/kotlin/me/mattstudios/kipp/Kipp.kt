@@ -1,5 +1,7 @@
 package me.mattstudios.kipp
 
+import me.mattstudios.kipp.commands.admin.BanFrosty
+import me.mattstudios.kipp.commands.admin.Paste
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.WhoIs
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
@@ -105,6 +107,8 @@ class Kipp {
         listOf(
                 Purge(),
                 WhoIs(database),
+                Paste(),
+                BanFrosty(),
 
                 UpdateDb(database),
                 SyncRoles(cache),

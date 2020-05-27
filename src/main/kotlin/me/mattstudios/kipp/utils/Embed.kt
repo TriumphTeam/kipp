@@ -49,8 +49,14 @@ class Embed {
         return this
     }
 
-    fun empty() {
+    fun empty(): Embed {
         embed.addBlankField(false)
+        return this
+    }
+
+    fun image(url: String): Embed {
+        embed.setImage(url)
+        return this
     }
 
     fun build(): MessageEmbed {
