@@ -25,7 +25,6 @@ class SyncRoles(private val cache: Cache) : CommandBase() {
         CompletableFuture.runAsync {
             guild.members.forEach {
                 Utils.setRoles(cache, guild, it)
-                println(it.effectiveName)
             }
         }
 

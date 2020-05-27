@@ -7,6 +7,7 @@ import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Optional
 import me.mattstudios.mfjda.annotations.Prefix
 import me.mattstudios.mfjda.base.CommandBase
+import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Member
 import java.time.format.DateTimeFormatter
 
@@ -21,28 +22,42 @@ class WhoIs(private val database: Database) : CommandBase() {
 
     @Default
     fun whoIs(@Optional whoMember: Member?) {
-        val typer = message.member ?: return
+        val commandUser = message.member ?: return
         val member = whoMember ?: message.member ?: return
         val user = member.user
 
         val embed = Embed().title(user.asTag)
                 .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
                 .field("Name", user.name, true)
-                .field("Status", "soon", true)
+                .field("Status", getStatus(member.onlineStatus), true)
                 .field("ID", "`${user.id}`", true)
                 .field("Created", member.timeCreated.format(formatter), true)
                 .field("Joined", member.timeJoined.format(formatter), true)
+                .field("Linked", "Nothing for now", true)
 
         val adminRole = message.guild.getRolesByName("admin", true).firstOrNull()
         val invite = database.getInvite(member.idLong)
-        if (adminRole != null && typer.roles.any { it.position >=  adminRole.position}) {
+        if (adminRole != null && commandUser.roles.any { it.position >= adminRole.position }) {
             if (invite != null) {
-                embed.field("Invite", "`${invite.invite}", true)
+                embed.empty()
+                embed.field("Invite", "`${invite.invite}`", true)
                 embed.field("Inviter", invite.inviter, true)
             }
         }
 
         message.channel.sendMessage(embed.build()).queue()
+    }
+
+    /**
+     * Gets the message equivalent for the current status
+     */
+    private fun getStatus(onlineStatus: OnlineStatus): String {
+        return when (onlineStatus) {
+            OnlineStatus.ONLINE -> "Online"
+            OnlineStatus.DO_NOT_DISTURB -> "DND"
+            OnlineStatus.IDLE -> "Idle"
+            else -> "Offline"
+        }
     }
 
 }

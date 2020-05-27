@@ -9,6 +9,7 @@ import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
+import me.mattstudios.kipp.listeners.PasteConversionRequest
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
@@ -51,13 +52,13 @@ class Kipp {
                             GatewayIntent.GUILD_MESSAGE_REACTIONS,
                             GatewayIntent.GUILD_MESSAGE_TYPING,
                             GatewayIntent.GUILD_MEMBERS,
-                            GatewayIntent.GUILD_INVITES
+                            GatewayIntent.GUILD_INVITES,
+                            GatewayIntent.GUILD_PRESENCES
                     ))
             .disableCache(
                     listOf(
                             CacheFlag.ACTIVITY,
-                            CacheFlag.VOICE_STATE,
-                            CacheFlag.CLIENT_STATUS
+                            CacheFlag.VOICE_STATE
                     )
             )
             .addEventListeners(cache, StatusListener())
@@ -138,7 +139,8 @@ class Kipp {
      */
     private fun registerListeners() {
         listOf(
-                JoinListener(config, cache, database)
+                JoinListener(config, cache, database),
+                PasteConversionRequest(jda)
         ).forEach { jda.addEventListener(it) }
     }
 
