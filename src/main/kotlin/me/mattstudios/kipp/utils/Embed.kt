@@ -2,16 +2,24 @@ package me.mattstudios.kipp.utils
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.entities.User
 
 /**
  * @author Matt
  */
-class Embed {
+class Embed(private val user: User? = null) {
 
     private val embed = EmbedBuilder()
+    private var footer: String = ""
+    private val userImage = user?.avatarUrl ?: user?.defaultAvatarUrl
 
     init {
         embed.setColor(Utils.hexToRgb("#ef83a0"))
+
+        if (user != null) {
+            footer = "Requested by: ${user.asTag}"
+            embed.setFooter(footer, userImage)
+        }
     }
 
     fun title(title: String): Embed {
@@ -26,6 +34,12 @@ class Embed {
 
     fun footer(footer: String, icon: String): Embed {
         embed.setFooter(footer, icon)
+        return this
+    }
+
+    fun appendFooter(footer: String): Embed {
+        this.footer += footer
+        embed.setFooter(this.footer, userImage)
         return this
     }
 

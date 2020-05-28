@@ -2,6 +2,7 @@ package me.mattstudios.kipp.settings
 
 import ch.jalu.configme.SettingsHolder
 import ch.jalu.configme.properties.Property
+import ch.jalu.configme.properties.PropertyInitializer.newListProperty
 import ch.jalu.configme.properties.PropertyInitializer.newProperty
 
 object Setting : SettingsHolder {
@@ -32,5 +33,8 @@ object Setting : SettingsHolder {
 
     @JvmField
     val SQL_DATABASE: Property<String> = newProperty("database.database", "matt")
+
+    @JvmField
+    val FAQ_COMMANDS: Property<MutableList<String>> = newListProperty("faq-commands")
 
 }

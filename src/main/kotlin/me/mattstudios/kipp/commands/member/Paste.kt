@@ -1,4 +1,4 @@
-package me.mattstudios.kipp.commands.admin
+package me.mattstudios.kipp.commands.member
 
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.mfjda.annotations.Command
@@ -15,7 +15,7 @@ class Paste : CommandBase() {
 
     @Default
     fun paste() {
-        val embed = Embed().field("HelpChat's paste", "Please use [**this paste**](https://paste.helpch.at/) instead.")
+        val embed = Embed(message.author).field("HelpChat's paste", "Please use [**this paste**](https://paste.helpch.at/) instead.")
         message.channel.sendMessage(embed.build()).queue()
     }
 

@@ -1,18 +1,20 @@
 package me.mattstudios.kipp
 
-import me.mattstudios.kipp.commands.admin.BanFrosty
-import me.mattstudios.kipp.commands.admin.Paste
+import me.mattstudios.kipp.commands.admin.FaqCreate
 import me.mattstudios.kipp.commands.admin.Purge
-import me.mattstudios.kipp.commands.admin.WhoIs
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
+import me.mattstudios.kipp.commands.member.Faqs
+import me.mattstudios.kipp.commands.member.Paste
+import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
 import me.mattstudios.kipp.listeners.PasteConversionRequest
 import me.mattstudios.kipp.listeners.StatusListener
+import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.mfjda.base.CommandManager
@@ -69,6 +71,8 @@ class Kipp {
     // The command manager
     private val commandManager = CommandManager(jda)
 
+    private val faqManager = FaqManager(commandManager, config)
+
     /**
      * Calls all the registers
      */
@@ -78,6 +82,8 @@ class Kipp {
         registerRequirements()
         registerMessages()
         registerCommands()
+
+        faqManager.registerAll()
     }
 
     /**
@@ -106,9 +112,11 @@ class Kipp {
     private fun registerCommands() {
         listOf(
                 Purge(),
+                FaqCreate(faqManager),
+
                 WhoIs(database),
                 Paste(),
-                BanFrosty(),
+                Faqs(faqManager),
 
                 UpdateDb(database),
                 SyncRoles(cache),

@@ -1,4 +1,4 @@
-package me.mattstudios.kipp.commands.admin
+package me.mattstudios.kipp.commands.member
 
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.utils.Embed
@@ -26,7 +26,7 @@ class WhoIs(private val database: Database) : CommandBase() {
         val member = whoMember ?: message.member ?: return
         val user = member.user
 
-        val embed = Embed().title(user.asTag)
+        val embed = Embed(message.author).title(user.asTag)
                 .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
                 .field("Name", user.name, true)
                 .field("Status", getStatus(member.onlineStatus), true)
