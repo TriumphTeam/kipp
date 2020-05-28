@@ -15,6 +15,8 @@ class FaqManager(
 ) {
 
     private val regex = Regex("\\[([^]]*)] (\\w+) (.*)")
+    private val thumbnailRegex = Regex("\\(([^]]*)\\)")
+    private val imageRegex = Regex("\\[([^]]*)]")
     private val commands = mutableListOf<String>()
 
     /**
@@ -40,6 +42,22 @@ class FaqManager(
     }
 
     /**
+     * Deletes the given faq command
+     */
+    fun delete(command: String): Boolean {
+        if (command !in commands) return false
+
+        val faqs = mutableListOf<String>()
+        faqs.addAll(config[Setting.FAQ_COMMANDS])
+        faqs.removeIf { "[$command]" in it }
+        config[Setting.FAQ_COMMANDS] = faqs
+
+        commands.remove(command)
+        commandManager.unregister("?", command)
+        return true
+    }
+
+    /**
      * Gets the list of faq commands
      */
     fun getFaqs(): List<String> {
@@ -51,7 +69,14 @@ class FaqManager(
      */
     private fun registerCommand(command: String, title: String, body: String) {
         commands.add(command)
-        val faqMessage = Embed().field(title.replace('_', ' '), body).build()
+        val image = imageRegex.find(body)?.destructured?.component1()
+        val thumbnail = thumbnailRegex.find(body)?.destructured?.component1()
+        val embed = Embed()
+
+        if (image != null) embed.image(image)
+        if (thumbnail != null) embed.thumbnail(thumbnail)
+
+        val faqMessage = embed.field(title.replace('_', ' '), body.escapeLine()).build()
         val faqCommand = CommandBuilder()
                 .setPrefix("?")
                 .setCommand(command)
@@ -60,6 +85,15 @@ class FaqManager(
                 .build()
 
         commandManager.register(faqCommand)
+
     }
+
+    /**
+     * Escapes the line, removes the link and adds \n for new lines
+     */
+    private fun String.escapeLine(): String = replace(thumbnailRegex, "")
+            .replace(imageRegex, "")
+            .replace("\\n", "\n")
+
 
 }

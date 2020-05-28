@@ -1,12 +1,12 @@
 package me.mattstudios.kipp
 
-import me.mattstudios.kipp.commands.admin.FaqCreate
+import me.mattstudios.kipp.commands.admin.FaqsManage
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
-import me.mattstudios.kipp.commands.member.Faqs
+import me.mattstudios.kipp.commands.member.Faq
 import me.mattstudios.kipp.commands.member.Paste
 import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
@@ -112,11 +112,11 @@ class Kipp {
     private fun registerCommands() {
         listOf(
                 Purge(),
-                FaqCreate(faqManager),
+                FaqsManage(faqManager),
 
                 WhoIs(database),
                 Paste(),
-                Faqs(faqManager),
+                Faq(faqManager),
 
                 UpdateDb(database),
                 SyncRoles(cache),

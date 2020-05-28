@@ -13,7 +13,7 @@ import me.mattstudios.mfjda.base.CommandBase
  */
 @Prefix("?")
 @Command("faqs")
-class FaqCreate(private val faqManager: FaqManager) : CommandBase() {
+class FaqsManage(private val faqManager: FaqManager) : CommandBase() {
 
     @SubCommand("create")
     @Requirement("#admin-up")
@@ -21,6 +21,20 @@ class FaqCreate(private val faqManager: FaqManager) : CommandBase() {
         faqManager.createFaq(command, title, args.joinToString(" "))
         val completeMessage = Embed(message.author).field("FAQ created successfully!", "The new FAQ is `?$command`.").build()
         message.channel.sendMessage(completeMessage).queue()
+    }
+
+    @SubCommand("remove")
+    @Requirement("#admin-up")
+    fun deleteFaq(command: String) {
+        val removeEmbed = Embed(message.author)
+
+        if (faqManager.delete(command)) {
+            removeEmbed.field("FAQ delete", "The FAQ `?$command` was deleted successfully!")
+        } else {
+            removeEmbed.field("FAQ delete", "The FAQ `?$command` does not exist or an error occurred while deleting it!")
+        }
+
+        message.channel.sendMessage(removeEmbed.build()).queue()
     }
 
 }

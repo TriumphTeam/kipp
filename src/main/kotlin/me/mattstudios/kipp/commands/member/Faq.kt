@@ -12,7 +12,7 @@ import me.mattstudios.mfjda.base.CommandBase
  */
 @Prefix("!")
 @Command("faq")
-class Faqs(private val faqManager: FaqManager) : CommandBase() {
+class Faq(private val faqManager: FaqManager) : CommandBase() {
 
     @Default
     fun faq() {
