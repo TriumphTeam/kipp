@@ -13,10 +13,29 @@ import java.net.URL
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.CompletableFuture
+import java.util.regex.Pattern
 import javax.net.ssl.HttpsURLConnection
 
 
 object Utils {
+
+    // Pattern to identify URLs in the message
+    val urlPattern = Pattern.compile(
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+            + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+            + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
+
+    /**
+     * Makes the word plural if the count is not one
+     */
+    fun String.plural(count: Int) = if (count != 1) this.plus("s") else this
+
+    /**
+     * Reads the content of an input stream and turns it into a string
+     */
+    fun InputStream.readContent(charset: Charset = Charsets.UTF_8) = bufferedReader(charset).use { it.readText() }
+
 
     /**
      * Gets the color from HEX code
@@ -79,13 +98,20 @@ object Utils {
     }
 
     /**
-     * Makes the word plural if the count is not one
+     * Gets all the links in a message
      */
-    fun String.plural(count: Int) = if (count != 1) this.plus("s") else this
+    fun String.extractLinks(): List<URL> {
+        val links = mutableListOf<URL>()
 
-    /**
-     * Reads the content of an input stream and turns it into a string
-     */
-    fun InputStream.readContent(charset: Charset = Charsets.UTF_8) = bufferedReader(charset).use { it.readText() }
+        val matcher = Utils.urlPattern.matcher(this)
+        while (matcher.find()) {
+            val matchStart = matcher.start(1)
+            val matchEnd = matcher.end()
+
+            links.add(URL(this.substring(matchStart, matchEnd)))
+        }
+
+        return links
+    }
 
 }

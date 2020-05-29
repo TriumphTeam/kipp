@@ -2,19 +2,22 @@ package me.mattstudios.kipp
 
 import me.mattstudios.kipp.commands.admin.FaqsManage
 import me.mattstudios.kipp.commands.admin.Purge
+import me.mattstudios.kipp.commands.admin.TodoManage
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.member.Faq
 import me.mattstudios.kipp.commands.member.Paste
+import me.mattstudios.kipp.commands.member.Todo
 import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
-import me.mattstudios.kipp.listeners.PasteConversionRequest
+import me.mattstudios.kipp.listeners.PasteConversionListener
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.manager.FaqManager
+import me.mattstudios.kipp.manager.TodoManager
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.mfjda.base.CommandManager
@@ -72,6 +75,7 @@ class Kipp {
     private val commandManager = CommandManager(jda)
 
     private val faqManager = FaqManager(commandManager, config)
+    private val todoManager = TodoManager(config)
 
     /**
      * Calls all the registers
@@ -110,20 +114,26 @@ class Kipp {
      * Registers all the commands for the bot
      */
     private fun registerCommands() {
-        listOf(
+        val commands = listOf(
                 Purge(),
                 FaqsManage(faqManager),
+                TodoManage(todoManager),
 
                 WhoIs(database),
                 Paste(),
                 Faq(faqManager),
+                Todo(todoManager),
 
                 UpdateDb(database),
                 SyncRoles(cache),
 
                 SetJoinChannel(config),
                 SetDefaultRole(config, cache)
-        ).forEach(commandManager::register)
+        )
+
+        logger.info("Registering ${commands.size} commands..")
+
+        commands.forEach(commandManager::register)
     }
 
     /**
@@ -134,7 +144,7 @@ class Kipp {
             return@registerParameter TypeResult(argument.toString().toIntOrNull(), argument)
         }
 
-        commandManager.registerParameter(Role::class.java) {argument ->
+        commandManager.registerParameter(Role::class.java) { argument ->
             return@registerParameter TypeResult(jda.getRoleById(argument.toString()), argument)
         }
 
@@ -150,10 +160,14 @@ class Kipp {
      * Registers the listeners for the bot
      */
     private fun registerListeners() {
-        listOf(
+        val listeners = listOf(
                 JoinListener(config, cache, database),
-                PasteConversionRequest(jda)
-        ).forEach { jda.addEventListener(it) }
+                PasteConversionListener(jda)
+        )
+
+        logger.info("Registering ${listeners.size} listeners..")
+
+        listeners.forEach(jda::addEventListener)
     }
 
 }

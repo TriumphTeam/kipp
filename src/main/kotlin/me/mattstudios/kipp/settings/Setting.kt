@@ -37,4 +37,7 @@ object Setting : SettingsHolder {
     @JvmField
     val FAQ_COMMANDS: Property<MutableList<String>> = newListProperty("faq-commands")
 
+    @JvmField
+    val TODOS: Property<MutableList<String>> = newListProperty("todos")
+
 }
