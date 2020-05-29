@@ -20,7 +20,7 @@ class Todo(private val todoManager: TodoManager) : CommandBase() {
         message.channel.sendMessage(embed.build()).queue()
     }
 
-    private fun List<String>.joinList(): String = if (isEmpty()) "The list is currently empty." else join()
-    private fun List<String>.join(): String = joinToString("\n") { "${indexOf(it) + 1} - $it" }
+    private fun List<String>.joinList() = if (isEmpty()) "The list is currently empty." else join()
+    private fun List<String>.join() = joinToString("\n") { "${indexOf(it) + 1} - $it" }
 
 }

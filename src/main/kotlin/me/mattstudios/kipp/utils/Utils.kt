@@ -20,7 +20,7 @@ import javax.net.ssl.HttpsURLConnection
 object Utils {
 
     // Pattern to identify URLs in the message
-    val urlPattern = Pattern.compile(
+    private val urlPattern = Pattern.compile(
             "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
             + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
             + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
@@ -103,7 +103,7 @@ object Utils {
     fun String.extractLinks(): List<URL> {
         val links = mutableListOf<URL>()
 
-        val matcher = Utils.urlPattern.matcher(this)
+        val matcher = urlPattern.matcher(this)
         while (matcher.find()) {
             val matchStart = matcher.start(1)
             val matchEnd = matcher.end()

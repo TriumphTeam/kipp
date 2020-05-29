@@ -29,7 +29,7 @@ class WhoIs(private val database: Database) : CommandBase() {
         val embed = Embed(message.author).title(user.asTag)
                 .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
                 .field("Name", user.name, true)
-                .field("Status", getStatus(member.onlineStatus), true)
+                .field("Status", member.onlineStatus.getStatus(), true)
                 .field("ID", "`${user.id}`", true)
                 .field("Created", member.timeCreated.format(formatter), true)
                 .field("Joined", member.timeJoined.format(formatter), true)
@@ -51,13 +51,11 @@ class WhoIs(private val database: Database) : CommandBase() {
     /**
      * Gets the message equivalent for the current status
      */
-    private fun getStatus(onlineStatus: OnlineStatus): String {
-        return when (onlineStatus) {
-            OnlineStatus.ONLINE -> "Online"
-            OnlineStatus.DO_NOT_DISTURB -> "DND"
-            OnlineStatus.IDLE -> "Idle"
-            else -> "Offline"
-        }
+    private fun OnlineStatus.getStatus() = when (this) {
+        OnlineStatus.ONLINE -> "Online"
+        OnlineStatus.DO_NOT_DISTURB -> "DND"
+        OnlineStatus.IDLE -> "Idle"
+        else -> "Offline"
     }
 
 }

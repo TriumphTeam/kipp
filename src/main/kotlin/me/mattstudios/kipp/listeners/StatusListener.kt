@@ -36,8 +36,6 @@ class StatusListener : ListenerAdapter() {
     /**
      * Updates the presence to the passed member count
      */
-    private fun updatePresence(jda: JDA, members: Int) {
-        jda.presence.setPresence(Activity.watching("$members members"), false)
-    }
+    private fun updatePresence(jda: JDA, members: Int) = jda.presence.setPresence(Activity.watching("$members members"), false)
 
 }

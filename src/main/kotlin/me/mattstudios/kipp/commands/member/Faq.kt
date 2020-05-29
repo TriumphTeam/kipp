@@ -23,6 +23,6 @@ class Faq(private val faqManager: FaqManager) : CommandBase() {
     /**
      * Appends the list with `?` around and joins it with ", "
      */
-    private fun List<String>.joinAndAppend(): String = this.joinToString(", ") { "`?$it`" }
+    private fun List<String>.joinAndAppend() = this.joinToString(", ") { "`?$it`" }
 
 }

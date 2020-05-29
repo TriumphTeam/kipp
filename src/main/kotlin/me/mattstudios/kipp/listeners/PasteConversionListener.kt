@@ -1,8 +1,8 @@
 package me.mattstudios.kipp.listeners
 
 import me.mattstudios.kipp.utils.Embed
-import me.mattstudios.kipp.utils.Utils
 import me.mattstudios.kipp.utils.Utils.createPaste
+import me.mattstudios.kipp.utils.Utils.extractLinks
 import me.mattstudios.kipp.utils.Utils.plural
 import me.mattstudios.kipp.utils.Utils.readContent
 import net.dv8tion.jda.api.JDA
@@ -31,7 +31,7 @@ class PasteConversionListener(private val jda: JDA) : ListenerAdapter() {
         val message = event.channel.retrieveMessageById(event.reaction.messageId).complete()
         message.clearReactions(emote.emote).queue()
 
-        val links = Utils.extractLinks(message.contentRaw)
+        val links = message.contentRaw.extractLinks()
         if (links.isEmpty()) return
 
         val newPastes = mutableListOf<String>()

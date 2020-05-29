@@ -14,6 +14,7 @@ import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
+import me.mattstudios.kipp.listeners.LeakListener
 import me.mattstudios.kipp.listeners.PasteConversionListener
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.manager.FaqManager
@@ -162,12 +163,13 @@ class Kipp {
     private fun registerListeners() {
         val listeners = listOf(
                 JoinListener(config, cache, database),
-                PasteConversionListener(jda)
+                PasteConversionListener(jda),
+                LeakListener(config)
         )
 
         logger.info("Registering ${listeners.size} listeners..")
 
-        listeners.forEach(jda::addEventListener)
+        listeners.forEach {jda.addEventListener(it) }
     }
 
 }
