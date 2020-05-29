@@ -3,6 +3,7 @@ package me.mattstudios.kipp.manager
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.base.CommandBuilder
 import me.mattstudios.mfjda.base.CommandManager
 
@@ -81,7 +82,7 @@ class FaqManager(
                 .setPrefix("?")
                 .setCommand(command)
                 .setArgumentsLimit(0)
-                .setExecutor { _, message -> message.channel.sendMessage(faqMessage).queue() }
+                .setExecutor { _, message -> message.textChannel.queueMessage(faqMessage) }
                 .build()
 
         commandManager.register(faqCommand)

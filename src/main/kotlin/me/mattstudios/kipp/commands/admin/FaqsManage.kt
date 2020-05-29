@@ -2,6 +2,7 @@ package me.mattstudios.kipp.commands.admin
 
 import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Prefix
 import me.mattstudios.mfjda.annotations.Requirement
@@ -20,7 +21,7 @@ class FaqsManage(private val faqManager: FaqManager) : CommandBase() {
     fun createFaq(command: String, title: String, args: Array<String>) {
         faqManager.createFaq(command, title, args.joinToString(" "))
         val completeMessage = Embed(message.author).field("FAQ created successfully!", "The new FAQ is `?$command`.").build()
-        message.channel.sendMessage(completeMessage).queue()
+        message.textChannel.queueMessage(completeMessage)
     }
 
     @SubCommand("remove")
@@ -34,7 +35,7 @@ class FaqsManage(private val faqManager: FaqManager) : CommandBase() {
             removeEmbed.field("FAQ delete", "The FAQ `?$command` does not exist or an error occurred while deleting it!")
         }
 
-        message.channel.sendMessage(removeEmbed.build()).queue()
+        message.textChannel.queueMessage(removeEmbed.build())
     }
 
 }

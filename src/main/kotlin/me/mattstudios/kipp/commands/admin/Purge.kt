@@ -1,6 +1,7 @@
 package me.mattstudios.kipp.commands.admin
 
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Prefix
@@ -25,7 +26,7 @@ class Purge : CommandBase() {
         val builder = Embed(message.author)
                 .field("Purge successful!", "• Removed $amount messages.", false)
                 .color("#72d6bf")
-        message.channel.sendMessage(builder.build()).queue()
+        message.textChannel.queueMessage(builder.build())
     }
 
 }

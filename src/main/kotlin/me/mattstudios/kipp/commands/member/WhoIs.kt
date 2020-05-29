@@ -2,6 +2,7 @@ package me.mattstudios.kipp.commands.member
 
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Optional
@@ -45,7 +46,7 @@ class WhoIs(private val database: Database) : CommandBase() {
             }
         }
 
-        message.channel.sendMessage(embed.build()).queue()
+        message.textChannel.queueMessage(embed.build())
     }
 
     /**

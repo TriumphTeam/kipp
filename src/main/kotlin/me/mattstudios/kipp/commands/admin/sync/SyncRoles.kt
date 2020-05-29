@@ -2,6 +2,7 @@ package me.mattstudios.kipp.commands.admin.sync
 
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
@@ -28,7 +29,7 @@ class SyncRoles(private val cache: Cache) : CommandBase() {
             }
         }
 
-        message.channel.sendMessage(Embed().field("Sync role", "All member roles have been updated!").build()).queue()
+        message.textChannel.queueMessage(Embed().field("Sync role", "All member roles have been updated!").build())
     }
 
 }

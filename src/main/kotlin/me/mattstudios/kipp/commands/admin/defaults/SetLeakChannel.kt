@@ -14,15 +14,15 @@ import me.mattstudios.mfjda.base.CommandBase
  * @author Matt
  */
 @Prefix("!")
-@Command("setjoinchannel")
-class SetJoinChannel(private val config: Config, private val cache: Cache) : CommandBase() {
+@Command("setleakchannel")
+class SetLeakChannel(private val config: Config, private val cache: Cache) : CommandBase() {
 
     @Default
     @Delete
     @Requirement("#admin-up")
-    fun setJoinChannel() {
-        config[Setting.JOIN_LOG_CHANNEL] = message.channel.id
-        cache.joinChannel = message.textChannel
+    fun setJoinChannel(role: String, roleId: String) {
+        config[Setting.LEAK_LOG_CHANNEL] = message.channel.id
+        cache.leakChannel = message.textChannel
     }
 
 }

@@ -2,6 +2,7 @@ package me.mattstudios.kipp.commands.member
 
 import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Prefix
@@ -17,7 +18,7 @@ class Faq(private val faqManager: FaqManager) : CommandBase() {
     @Default
     fun faq() {
         val faqMessage = Embed(message.author).field("Available FAQs:", faqManager.getFaqs().joinAndAppend()).build()
-        message.channel.sendMessage(faqMessage).queue()
+        message.textChannel.queueMessage(faqMessage)
     }
 
     /**

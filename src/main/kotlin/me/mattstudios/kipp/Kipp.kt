@@ -5,6 +5,7 @@ import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.TodoManage
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
+import me.mattstudios.kipp.commands.admin.defaults.SetLeakChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.member.Faq
@@ -14,13 +15,14 @@ import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
-import me.mattstudios.kipp.listeners.LeakListener
+import me.mattstudios.kipp.listeners.MessagePasteListener
 import me.mattstudios.kipp.listeners.PasteConversionListener
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.manager.TodoManager
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.base.CommandManager
 import me.mattstudios.mfjda.base.components.TypeResult
 import net.dv8tion.jda.api.JDABuilder
@@ -107,8 +109,8 @@ class Kipp {
     private fun registerMessages() {
         commandManager.registerMessage("cmd.no.permission") {}
         // TODO this ones
-        commandManager.registerMessage("cmd.no.exists") { channel -> channel.sendMessage("Command doesn't exist").queue() }
-        commandManager.registerMessage("cmd.wrong.usage") { channel -> channel.sendMessage("Wrong usage").queue() }
+        commandManager.registerMessage("cmd.no.exists") { channel -> channel.queueMessage("Command doesn't exist") }
+        commandManager.registerMessage("cmd.wrong.usage") { channel -> channel.queueMessage("Wrong usage") }
     }
 
     /**
@@ -128,8 +130,9 @@ class Kipp {
                 UpdateDb(database),
                 SyncRoles(cache),
 
-                SetJoinChannel(config),
-                SetDefaultRole(config, cache)
+                SetJoinChannel(config, cache),
+                SetDefaultRole(config, cache),
+                SetLeakChannel(config, cache)
         )
 
         logger.info("Registering ${commands.size} commands..")
@@ -141,13 +144,8 @@ class Kipp {
      * Registers the requirements for the bot commands
      */
     private fun registerParameters() {
-        commandManager.registerParameter(Int::class.java) { argument ->
-            return@registerParameter TypeResult(argument.toString().toIntOrNull(), argument)
-        }
-
-        commandManager.registerParameter(Role::class.java) { argument ->
-            return@registerParameter TypeResult(jda.getRoleById(argument.toString()), argument)
-        }
+        commandManager.registerParameter(Int::class.java) { argument -> TypeResult(argument.toString().toIntOrNull(), argument) }
+        commandManager.registerParameter(Role::class.java) { argument -> TypeResult(jda.getRoleById(argument.toString()), argument) }
 
         commandManager.registerParameter(Member::class.java) { argument ->
             if (argument == null) return@registerParameter TypeResult(argument)
@@ -164,12 +162,12 @@ class Kipp {
         val listeners = listOf(
                 JoinListener(config, cache, database),
                 PasteConversionListener(jda),
-                LeakListener(config)
+                MessagePasteListener(config, cache)
         )
 
         logger.info("Registering ${listeners.size} listeners..")
 
-        listeners.forEach {jda.addEventListener(it) }
+        listeners.forEach { jda.addEventListener(it) }
     }
 
 }

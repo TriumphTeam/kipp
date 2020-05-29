@@ -14,6 +14,9 @@ object Setting : SettingsHolder {
     val JOIN_LOG_CHANNEL: Property<String> = newProperty("join-log-channel", "0")
 
     @JvmField
+    val LEAK_LOG_CHANNEL: Property<String> = newProperty("leak-log-channel", "0")
+
+    @JvmField
     val MEMBER_ROLE: Property<String> = newProperty("member-role", "0")
 
     @JvmField
@@ -39,5 +42,8 @@ object Setting : SettingsHolder {
 
     @JvmField
     val TODOS: Property<MutableList<String>> = newListProperty("todos")
+
+    @JvmField
+    val LEAK_WORDS: Property<MutableList<String>> = newListProperty("leak-words")
 
 }

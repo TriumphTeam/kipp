@@ -2,6 +2,7 @@ package me.mattstudios.kipp.commands.admin
 
 import me.mattstudios.kipp.manager.TodoManager
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Prefix
 import me.mattstudios.mfjda.annotations.SubCommand
@@ -18,7 +19,7 @@ class TodoManage(private val todoManager: TodoManager) : CommandBase() {
     fun createTodo(args: Array<String>) {
         todoManager.create(args.joinToString(" "))
         val embed = Embed(message.author).field("To-do", "To-do added successfully!")
-        message.channel.sendMessage(embed.build()).queue()
+        message.textChannel.queueMessage(embed.build())
     }
 
     @SubCommand("done")
@@ -31,7 +32,7 @@ class TodoManage(private val todoManager: TodoManager) : CommandBase() {
             removeEmbed.field("FAQ delete", "The to-do `$index` does not exist or an error occurred while deleting it!")
         }
 
-        message.channel.sendMessage(removeEmbed.build()).queue()
+        message.textChannel.queueMessage(removeEmbed.build())
     }
 
 }

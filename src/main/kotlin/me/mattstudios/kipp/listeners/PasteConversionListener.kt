@@ -1,6 +1,7 @@
 package me.mattstudios.kipp.listeners
 
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils.createPaste
 import me.mattstudios.kipp.utils.Utils.extractLinks
 import me.mattstudios.kipp.utils.Utils.plural
@@ -40,7 +41,7 @@ class PasteConversionListener(private val jda: JDA) : ListenerAdapter() {
             if ("pastebin.com" !in link.host) continue
 
             val url = URL(link, "/raw${link.path}")
-            newPastes.add(createPaste(url.openStream().readContent()))
+            newPastes.add(createPaste(url.readContent()))
         }
 
         val pasteSize = newPastes.size
@@ -50,7 +51,7 @@ class PasteConversionListener(private val jda: JDA) : ListenerAdapter() {
         val embed = Embed()
                 .field("Paste".plural(pasteSize) + " converted!", newPastes.joinToString("\n"))
 
-        message.channel.sendMessage(embed.build()).queue()
+        message.textChannel.queueMessage(embed.build())
     }
 
 }

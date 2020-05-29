@@ -6,6 +6,7 @@ import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.entities.Member
@@ -66,13 +67,13 @@ class Database(config: Config) {
         }
 
         task.thenAccept {
-            channel.sendMessage(
+            channel.queueMessage(
                     Embed().field(
                             "Updating database",
                             "Successfully updated!" +
                             "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(it)}s"
                     ).build()
-            ).queue()
+            )
         }
     }
 

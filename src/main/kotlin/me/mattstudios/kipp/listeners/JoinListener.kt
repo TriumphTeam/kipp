@@ -4,6 +4,7 @@ import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils
 import me.mattstudios.kipp.utils.Utils.setRoles
 import net.dv8tion.jda.api.EmbedBuilder
@@ -52,7 +53,7 @@ class JoinListener(
                 .footer(today.format(formatter))
                 .build()
 
-        channel.sendMessage(message).queue()
+        channel.queueMessage(message)
 
         database.insertMember(member, invite)
     }
@@ -72,7 +73,7 @@ class JoinListener(
                 .setFooter(LocalDateTime.now().format(formatter))
                 .build()
 
-        channel.sendMessage(message).queue()
+        channel.queueMessage(message)
     }
 
     /**

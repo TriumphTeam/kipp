@@ -7,7 +7,6 @@ import java.awt.Color
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
@@ -34,9 +33,8 @@ object Utils {
     /**
      * Reads the content of an input stream and turns it into a string
      */
-    fun InputStream.readContent(charset: Charset = Charsets.UTF_8) = bufferedReader(charset).use { it.readText() }
-
-
+    fun URL.readContent(charset: Charset = Charsets.UTF_8) = openStream().bufferedReader(charset).use { it.readText() }
+    
     /**
      * Gets the color from HEX code
      */
