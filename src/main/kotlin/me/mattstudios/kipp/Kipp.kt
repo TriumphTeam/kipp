@@ -6,6 +6,7 @@ import me.mattstudios.kipp.commands.admin.TodoManage
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetLeakChannel
+import me.mattstudios.kipp.commands.admin.defaults.SetMessagesChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.member.Faq
@@ -15,6 +16,7 @@ import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
+import me.mattstudios.kipp.listeners.MessageLogListener
 import me.mattstudios.kipp.listeners.MessagePasteListener
 import me.mattstudios.kipp.listeners.PasteConversionListener
 import me.mattstudios.kipp.listeners.StatusListener
@@ -28,6 +30,7 @@ import me.mattstudios.mfjda.base.components.TypeResult
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.Logger
@@ -132,7 +135,8 @@ class Kipp {
 
                 SetJoinChannel(config, cache),
                 SetDefaultRole(config, cache),
-                SetLeakChannel(config, cache)
+                SetLeakChannel(config, cache),
+                SetMessagesChannel(config, cache)
         )
 
         logger.info("Registering ${commands.size} commands..")
@@ -153,6 +157,14 @@ class Kipp {
             val guild = jda.guilds.firstOrNull() ?: return@registerParameter TypeResult(argument)
             return@registerParameter TypeResult(guild.getMemberById(numericArg), argument)
         }
+
+        commandManager.registerParameter(TextChannel::class.java) { argument ->
+            if (argument == null) return@registerParameter TypeResult(argument)
+            val numericArg = argument.toString().replace(("[^\\d]").toRegex(), "")
+            val guild = jda.guilds.firstOrNull() ?: return@registerParameter TypeResult(argument)
+            return@registerParameter TypeResult(guild.getTextChannelById(numericArg), argument)
+        }
+
     }
 
     /**
@@ -162,7 +174,8 @@ class Kipp {
         val listeners = listOf(
                 JoinListener(config, cache, database),
                 PasteConversionListener(jda),
-                MessagePasteListener(config, cache)
+                MessagePasteListener(config, cache),
+                MessageLogListener(config, cache)
         )
 
         logger.info("Registering ${listeners.size} listeners..")

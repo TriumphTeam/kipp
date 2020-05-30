@@ -1,6 +1,7 @@
 package me.mattstudios.kipp.commands.admin.sync
 
 import me.mattstudios.kipp.data.Cache
+import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils
@@ -29,7 +30,7 @@ class SyncRoles(private val cache: Cache) : CommandBase() {
             }
         }
 
-        message.textChannel.queueMessage(Embed().field("Sync role", "All member roles have been updated!").build())
+        message.textChannel.queueMessage(Embed(message.author).color(Color.SUCCESS).field("Sync role", "All member roles have been updated!").build())
     }
 
 }

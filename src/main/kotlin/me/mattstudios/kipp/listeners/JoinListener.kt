@@ -3,11 +3,10 @@ package me.mattstudios.kipp.listeners
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.settings.Config
+import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
-import me.mattstudios.kipp.utils.Utils
 import me.mattstudios.kipp.utils.Utils.setRoles
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
@@ -46,7 +45,7 @@ class JoinListener(
 
         val message = Embed().title("Member joined!")
                 .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
-                .color("#72d689")
+                .color(Color.SUCCESS)
                 .field(user.asTag, member.asMention)
                 .field("Invite:", "`${invite?.code}` by `${invite?.inviter?.asTag}`")
                 .field("Account age:", abs(ChronoUnit.DAYS.between(today, user.timeCreated)).toString())
@@ -66,11 +65,11 @@ class JoinListener(
 
         val user = event.user
 
-        val message = EmbedBuilder().setTitle("Member left!")
-                .setThumbnail(user.avatarUrl)
-                .setColor(Utils.hexToRgb("#d67272"))
-                .addField(user.asTag, user.asMention, false)
-                .setFooter(LocalDateTime.now().format(formatter))
+        val message = Embed().title("Member left!")
+                .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
+                .color(Color.SUCCESS)
+                .field(user.asTag, user.asMention)
+                .footer(LocalDateTime.now().format(formatter))
                 .build()
 
         channel.queueMessage(message)

@@ -15,17 +15,17 @@ import net.dv8tion.jda.api.entities.TextChannel
  * @author Matt
  */
 @Prefix("!")
-@Command("setjoinchannel")
-class SetJoinChannel(private val config: Config, private val cache: Cache) : CommandBase() {
+@Command("setmessageschannel")
+class SetMessagesChannel(private val config: Config, private val cache: Cache) : CommandBase() {
 
     @Default
     @Requirement("#admin-up")
-    fun setJoinChannel(channel: TextChannel?) {
+    fun setLeakChannel(channel: TextChannel?) {
         if (channel == null) return
-        config[Setting.JOIN_LOG_CHANNEL] = channel.id
-        cache.joinChannel = channel
+        config[Setting.MESSAGE_LOG_CHANNEL] = channel.id
+        cache.messageChannel = channel
 
-        message.textChannel.queueMessage("Join/Quit log channel set successfully!")
+        message.textChannel.queueMessage("Message log channel set successfully!")
     }
 
 }

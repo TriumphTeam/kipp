@@ -3,6 +3,7 @@ package me.mattstudios.kipp.scanners
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils.readContent
@@ -31,7 +32,8 @@ class Scanner(
 
         if (index == -1) return false
 
-        val embed = Embed().title("Potential leak detected by ${message.author.asTag}!")
+        val embed = Embed().color("#ffc180").title("Potential leak by ${message.author.asTag} has been detected!")
+                .color(Color.WARNING)
                 .field(
                         "Leak was triggered by line: **${index + 1}**",
                         "```ini\n" +
@@ -40,7 +42,7 @@ class Scanner(
                 )
                 .field("Paste", originalLink.toString())
                 .field("User", message.author.asMention)
-                .field("Channel", message.textChannel.asMention)
+                .field("Channel", "[**#${message.textChannel.name}**](${message.jumpUrl})")
 
         channel.queueMessage(embed.build())
 

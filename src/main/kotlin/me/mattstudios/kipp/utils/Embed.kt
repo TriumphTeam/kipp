@@ -14,7 +14,7 @@ class Embed(private val user: User? = null) {
     private val userImage = user?.avatarUrl ?: user?.defaultAvatarUrl
 
     init {
-        embed.setColor(Utils.hexToRgb("#ef83a0"))
+        embed.setColor(Utils.hexToRgb(Color.DEFAULT.code))
 
         if (user != null) {
             footer = "Requested by: ${user.asTag}"
@@ -45,6 +45,11 @@ class Embed(private val user: User? = null) {
 
     fun color(color: String): Embed {
         embed.setColor(Utils.hexToRgb(color))
+        return this
+    }
+
+    fun color(color: Color): Embed {
+        embed.setColor(Utils.hexToRgb(color.code))
         return this
     }
 

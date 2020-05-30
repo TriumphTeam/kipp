@@ -16,6 +16,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
 
     var joinChannel: TextChannel? = null
     var leakChannel: TextChannel? = null
+    var messageChannel: TextChannel? = null
 
     var memberRole: Role? = null
     var pluginsRole: Role? = null
@@ -30,6 +31,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
         val guild = event.guild
         joinChannel = guild.getTextChannelById(config[Setting.JOIN_LOG_CHANNEL])
         leakChannel = guild.getTextChannelById(config[Setting.LEAK_LOG_CHANNEL])
+        leakChannel = guild.getTextChannelById(config[Setting.MESSAGE_LOG_CHANNEL])
 
         invites = guild.retrieveInvites().complete()
 

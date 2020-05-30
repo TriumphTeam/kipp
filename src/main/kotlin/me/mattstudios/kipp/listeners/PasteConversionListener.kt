@@ -1,5 +1,6 @@
 package me.mattstudios.kipp.listeners
 
+import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils.createPaste
@@ -49,6 +50,7 @@ class PasteConversionListener(private val jda: JDA) : ListenerAdapter() {
         if (pasteSize == 0) return
 
         val embed = Embed()
+                .color(Color.SUCCESS)
                 .field("Paste".plural(pasteSize) + " converted!", newPastes.joinToString("\n"))
 
         message.textChannel.queueMessage(embed.build())

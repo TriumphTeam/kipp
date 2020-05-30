@@ -20,7 +20,7 @@ class UpdateDb(private val database: Database) : CommandBase() {
     @Requirement("#admin-up")
     fun insertAll() {
         database.insertAll(message.guild, message.channel)
-        message.textChannel.queueMessage(Embed().field("Updating database", "Working on it!").build())
+        message.textChannel.queueMessage(Embed(message.author).field("Updating database", "Working on it!").build())
     }
 
 }

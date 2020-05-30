@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource
 import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import net.dv8tion.jda.api.entities.Guild
@@ -68,11 +69,13 @@ class Database(config: Config) {
 
         task.thenAccept {
             channel.queueMessage(
-                    Embed().field(
-                            "Updating database",
-                            "Successfully updated!" +
-                            "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(it)}s"
-                    ).build()
+                    Embed()
+                            .color(Color.SUCCESS)
+                            .field(
+                                    "Updating database",
+                                    "Successfully updated!" +
+                                    "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(it)}s"
+                            ).build()
             )
         }
     }
