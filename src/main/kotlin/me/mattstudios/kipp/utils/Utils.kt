@@ -11,6 +11,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 import java.util.regex.Pattern
@@ -26,7 +27,9 @@ object Utils {
             + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
             Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL)
 
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
     /**
      * Makes the word plural if the count is not one

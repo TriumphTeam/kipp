@@ -61,4 +61,7 @@ object Setting : SettingsHolder {
     @JvmField
     val BLACK_LISTED_CHANNELS: Property<MutableList<String>> = newListProperty("black-listed-channels")
 
+    @JvmField
+    val REMINDERS: Property<MutableList<String>> = newListProperty("reminders")
+
 }

@@ -15,11 +15,11 @@ import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
+import me.mattstudios.kipp.utils.Utils
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import java.text.SimpleDateFormat
 import java.time.format.DateTimeParseException
 
 
@@ -28,11 +28,9 @@ import java.time.format.DateTimeParseException
  */
 class KippListener(
         private val cache: Cache,
-        config: Config,
+        private val config: Config,
         private val scheduler: Scheduler
 ) : ListenerAdapter() {
-
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
     private val client = SessionsClient.create()
     private val session = SessionName.of(config[Setting.DIALOGFLOW_PROJECT], (100000000..999999999).random().toString())
@@ -93,18 +91,36 @@ class KippListener(
 
         val (dateArg, task) = response
         val date = try {
-            dateFormat.parse(dateArg)
+            Utils.dateFormat.parse(dateArg)
         } catch (e: DateTimeParseException) {
             channel.queueMessage(Embed(user).field("Reminder", "Could not set a reminder, perhaps you didn't specify the time?").build())
             return
         }
 
-        val embed = Embed(user)
-                .description("Sure thing ${user.asMention}, I'll remind you to `$task`!")
-        channel.queueMessage(embed.build())
+        channel.queueMessage(Embed(user).description("Sure thing ${user.asMention}, I'll remind you to `$task`!").build())
 
-        scheduler.scheduleTask("nothing", date) {
-            println("test")
+        val mainReminders = mutableListOf<String>()
+        mainReminders.addAll(config[Setting.REMINDERS])
+        val reminder = "[${Utils.dateFormat.format(date)}|${user.id}] $task"
+        mainReminders.add(reminder)
+        config[Setting.REMINDERS] = mainReminders
+
+        val reminderChannel = cache.reminderChannel ?: return
+
+        scheduler.scheduleTask(date) {
+            reminderChannel.queueMessage(
+                    Embed().description(
+                            "Hey ${user.asMention} reminding you to:\n" +
+                            "```\n" +
+                            task +
+                            "\n```")
+                            .build()
+            )
+
+            val reminders = mutableListOf<String>()
+            reminders.addAll(config[Setting.REMINDERS])
+            reminders.remove(reminder)
+            config[Setting.REMINDERS] = reminders
         }
     }
 

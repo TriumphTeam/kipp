@@ -7,6 +7,7 @@ import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetLeakChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetMessagesChannel
+import me.mattstudios.kipp.commands.admin.defaults.SetReminderChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.admin.sync.UpdateMessages
@@ -24,6 +25,7 @@ import me.mattstudios.kipp.listeners.PasteConversionListener
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.manager.TodoManager
+import me.mattstudios.kipp.scheduler.Scheduler
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
@@ -84,6 +86,7 @@ class Kipp {
 
     private val faqManager = FaqManager(commandManager, config)
     private val todoManager = TodoManager(config)
+    private val scheduler = Scheduler(jda, config, cache)
 
     /**
      * Calls all the registers
@@ -139,7 +142,8 @@ class Kipp {
                 SetJoinChannel(config, cache),
                 SetDefaultRole(config, cache),
                 SetLeakChannel(config, cache),
-                SetMessagesChannel(config, cache)
+                SetMessagesChannel(config, cache),
+                SetReminderChannel(config, cache)
         )
 
         logger.info("Registering ${commands.size} commands..")
@@ -179,7 +183,7 @@ class Kipp {
                 PasteConversionListener(jda),
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
-                KippListener(cache, config)
+                KippListener(cache, config, scheduler)
         )
 
         logger.info("Registering ${listeners.size} listeners..")
