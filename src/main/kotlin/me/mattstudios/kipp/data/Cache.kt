@@ -17,10 +17,12 @@ class Cache(private val config: Config) : ListenerAdapter() {
     var joinChannel: TextChannel? = null
     var leakChannel: TextChannel? = null
     var messageChannel: TextChannel? = null
+    var reminderChannel: TextChannel? = null
 
     var memberRole: Role? = null
     var pluginsRole: Role? = null
     var pingsRole: Role? = null
+    var adminRole: Role? = null
 
     var invites = mutableListOf<Invite>()
 
@@ -31,14 +33,15 @@ class Cache(private val config: Config) : ListenerAdapter() {
         val guild = event.guild
         joinChannel = guild.getTextChannelById(config[Setting.JOIN_LOG_CHANNEL])
         leakChannel = guild.getTextChannelById(config[Setting.LEAK_LOG_CHANNEL])
-        leakChannel = guild.getTextChannelById(config[Setting.MESSAGE_LOG_CHANNEL])
+        messageChannel = guild.getTextChannelById(config[Setting.MESSAGE_LOG_CHANNEL])
+        reminderChannel = guild.getTextChannelById(config[Setting.REMINDER_CHANNEL])
 
         invites = guild.retrieveInvites().complete()
 
         memberRole = guild.getRoleById(config[Setting.MEMBER_ROLE])
         pluginsRole = guild.getRoleById(config[Setting.PLUGINS_ROLE])
         pingsRole = guild.getRoleById(config[Setting.PINGS_ROLE])
-
+        adminRole = guild.getRoleById(config[Setting.ADMIN_ROLE])
     }
 
     /**

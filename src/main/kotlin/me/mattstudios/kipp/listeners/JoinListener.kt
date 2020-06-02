@@ -1,11 +1,13 @@
 package me.mattstudios.kipp.listeners
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
-import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
+import me.mattstudios.kipp.utils.Utils.formatter
 import me.mattstudios.kipp.utils.Utils.setRoles
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Invite
@@ -13,7 +15,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 
@@ -21,12 +22,9 @@ import kotlin.math.abs
  * @author Matt
  */
 class JoinListener(
-        private val config: Config,
         private val cache: Cache,
         private val database: Database
 ) : ListenerAdapter() {
-
-    private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
 
     /**
      * Handles the member join event
@@ -49,12 +47,13 @@ class JoinListener(
                 .field(user.asTag, member.asMention)
                 .field("Invite:", "`${invite?.code}` by `${invite?.inviter?.asTag}`")
                 .field("Account age:", abs(ChronoUnit.DAYS.between(today, user.timeCreated)).toString())
-                .footer(today.format(formatter))
+                .footer("ID: ${user.id}")
                 .build()
 
         channel.queueMessage(message)
 
-        database.insertMember(member, invite)
+        GlobalScope.launch { database.insertMember(member, invite) }
+
     }
 
     /**
@@ -67,7 +66,7 @@ class JoinListener(
 
         val message = Embed().title("Member left!")
                 .thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
-                .color(Color.SUCCESS)
+                .color(Color.FAIL)
                 .field(user.asTag, user.asMention)
                 .footer(LocalDateTime.now().format(formatter))
                 .build()

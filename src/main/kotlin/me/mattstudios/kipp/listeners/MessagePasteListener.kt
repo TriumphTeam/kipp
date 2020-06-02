@@ -1,7 +1,7 @@
 package me.mattstudios.kipp.listeners
 
 import me.mattstudios.kipp.data.Cache
-import me.mattstudios.kipp.scanners.Scanner
+import me.mattstudios.kipp.scanner.PasteScanner
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.utils.Utils.extractLinks
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -17,7 +17,7 @@ class MessagePasteListener(config: Config, cache: Cache) : ListenerAdapter() {
     private val pasteServices = listOf("pastebin.com", "hastebin.com", "paste.helpch.at")
 
     // Scanners for content
-    private val leakScanner = Scanner(config, cache)
+    private val leakScanner = PasteScanner(config, cache)
 
     /**
      * Handles the receiving of messages

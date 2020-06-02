@@ -3,15 +3,18 @@ package me.mattstudios.kipp.utils
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
+import java.time.LocalDateTime
 
 /**
  * @author Matt
  */
-class Embed(private val user: User? = null) {
+class Embed(user: User? = null, timestamp: Boolean = false) {
 
     private val embed = EmbedBuilder()
     private var footer: String = ""
     private val userImage = user?.avatarUrl ?: user?.defaultAvatarUrl
+
+    constructor(timestamp: Boolean) : this(null, timestamp)
 
     init {
         embed.setColor(Utils.hexToRgb(Color.DEFAULT.code))
@@ -20,6 +23,8 @@ class Embed(private val user: User? = null) {
             footer = "Requested by: ${user.asTag}"
             embed.setFooter(footer, userImage)
         }
+
+        embed.setTimestamp(LocalDateTime.now())
     }
 
     fun title(title: String): Embed {
@@ -75,6 +80,21 @@ class Embed(private val user: User? = null) {
 
     fun image(url: String): Embed {
         embed.setImage(url)
+        return this
+    }
+
+    fun author(author: String): Embed {
+        embed.setAuthor(author)
+        return this
+    }
+
+    fun author(author: String, image: String): Embed {
+        embed.setAuthor(author, null, image)
+        return this
+    }
+
+    fun description(description: String): Embed {
+        embed.setDescription(description)
         return this
     }
 

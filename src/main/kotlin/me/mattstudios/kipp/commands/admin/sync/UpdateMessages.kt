@@ -15,14 +15,14 @@ import me.mattstudios.mfjda.base.CommandBase
  * @author Matt
  */
 @Prefix("!")
-@Command("updatedb")
-class UpdateDb(private val database: Database) : CommandBase() {
+@Command("updatemessages")
+class UpdateMessages(private val database: Database) : CommandBase() {
 
     @Default
     @Requirement("#admin-up")
     fun insertAll() {
-        GlobalScope.launch { database.insertAll(message.guild, message.channel) }
-        message.textChannel.queueMessage(Embed(message.author).field("Updating database", "Working on it!").build())
+        GlobalScope.launch { database.insertAllMessages(message.guild, message.textChannel) }
+        message.textChannel.queueMessage(Embed(message.author).field("Updating database messages", "Working on it!").build())
     }
 
 }

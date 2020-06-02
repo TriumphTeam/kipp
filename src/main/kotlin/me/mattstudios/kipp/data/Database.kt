@@ -2,17 +2,22 @@ package me.mattstudios.kipp.data
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
 import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.settings.Setting.BLACK_LISTED_CHANNELS
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
-import java.util.concurrent.CompletableFuture
+import net.dv8tion.jda.api.entities.TextChannel
+import java.sql.SQLException
 import java.util.concurrent.TimeUnit
 import kotlin.system.measureTimeMillis
 
@@ -20,7 +25,7 @@ import kotlin.system.measureTimeMillis
 /**
  * @author Matt
  */
-class Database(config: Config) {
+class Database(private val config: Config) {
 
     private val dataSource: HikariDataSource
 
@@ -50,9 +55,9 @@ class Database(config: Config) {
     /**
      * Inserts all the members into the database
      */
-    fun insertAll(guild: Guild, channel: MessageChannel) {
-        val task = CompletableFuture.supplyAsync {
-            return@supplyAsync measureTimeMillis {
+    suspend fun insertAll(guild: Guild, channel: MessageChannel) {
+        val time = withContext(IO) {
+            measureTimeMillis {
                 dataSource.connection.use { connection ->
                     guild.members.forEach { member ->
                         val preparedStatement = connection.prepareStatement("insert ignore into members values (?, ?, ?)")
@@ -67,24 +72,62 @@ class Database(config: Config) {
             }
         }
 
-        task.thenAccept {
-            channel.queueMessage(
-                    Embed()
-                            .color(Color.SUCCESS)
-                            .field(
-                                    "Updating database",
-                                    "Successfully updated!" +
-                                    "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(it)}s"
-                            ).build()
-            )
+        channel.queueMessage(
+                Embed()
+                        .color(Color.SUCCESS)
+                        .field(
+                                "Updating database",
+                                "Successfully updated!" +
+                                "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(time)}s"
+                        ).build()
+        )
+    }
+
+    /**
+     * Inserts all the members into the database
+     */
+    suspend fun insertAllMessages(guild: Guild, messageChannel: TextChannel) {
+        val time = withContext(IO) {
+            measureTimeMillis {
+                val connection = dataSource.connection
+                guild.textChannels.filter { it.id !in config[BLACK_LISTED_CHANNELS] }
+                        .forEach { channel ->
+                            channel.history.retrievePast(100).complete()
+                                    .filter { !it.author.isBot }
+                                    .forEach { message ->
+                                        try {
+                                            val statement = connection.prepareStatement("replace into messages(message_id, message, author) values(?, ?, ?)")
+                                            statement.setLong(1, message.idLong)
+                                            statement.setString(2, message.contentDisplay)
+                                            statement.setLong(3, message.author.idLong)
+
+                                            statement.executeUpdate()
+                                        } catch (exception: SQLException) {
+                                            Kipp.logger.warn("Error inserting message to database!")
+                                        }
+                                    }
+                        }
+            }
+
         }
+
+        messageChannel.queueMessage(
+                Embed()
+                        .color(Color.SUCCESS)
+                        .field(
+                                "Updating database messages",
+                                "Successfully updated all messages!" +
+                                "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(time)}s"
+                        ).build()
+        )
+
     }
 
     /**
      * Insert the new member
      */
-    fun insertMember(member: Member, invite: Invite?) {
-        CompletableFuture.runAsync {
+    suspend fun insertMember(member: Member, invite: Invite?) {
+        withContext(IO) {
             dataSource.connection.use { connection ->
                 val preparedStatement = connection.prepareStatement("replace into members values (?, ?, ?)")
 
@@ -97,6 +140,26 @@ class Database(config: Config) {
         }
     }
 
+    /**
+     * Insert the new member
+     */
+    suspend fun insertMessage(message: Message) {
+        withContext(IO) {
+            dataSource.connection.use { connection ->
+                val preparedStatement = connection.prepareStatement("replace into messages(message_id, message, author) values (?, ?, ?)")
+
+                preparedStatement.setLong(1, message.idLong)
+                preparedStatement.setString(2, message.contentDisplay)
+                preparedStatement.setLong(3, message.author.idLong)
+
+                preparedStatement.executeUpdate()
+            }
+        }
+    }
+
+    /**
+     * Gets an invite from the member id
+     */
     fun getInvite(memberId: Long): KippInvite? {
         return dataSource.connection.use { connection ->
             val preparedStatement = connection.prepareStatement("select invite, invited_by from members where member_id = ?")
@@ -110,6 +173,36 @@ class Database(config: Config) {
                 return@use KippInvite(invite, inviter)
             }
 
+            return@use null
+        }
+    }
+
+    /**
+     * Gets the message if it's on the database
+     */
+    fun getMessage(messageId: Long): String? {
+        return dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("select message from messages where message_id = ?")
+            preparedStatement.setLong(1, messageId)
+
+            val resultSet = preparedStatement.executeQuery()
+
+            while (resultSet.next()) return@use resultSet.getString("message")
+            return@use null
+        }
+    }
+
+    /**
+     * Gets the message if it's on the database
+     */
+    fun getMessageAuthor(messageId: Long): Long? {
+        return dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("select author from messages where message_id = ?")
+            preparedStatement.setLong(1, messageId)
+
+            val resultSet = preparedStatement.executeQuery()
+
+            while (resultSet.next()) return@use resultSet.getLong("author")
             return@use null
         }
     }

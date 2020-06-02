@@ -11,22 +11,28 @@ object Setting : SettingsHolder {
     val TOKEN: Property<String> = newProperty("token", "none")
 
     @JvmField
-    val JOIN_LOG_CHANNEL: Property<String> = newProperty("join-log-channel", "0")
+    val JOIN_LOG_CHANNEL: Property<String> = newProperty("channel.join-log", "0")
 
     @JvmField
-    val LEAK_LOG_CHANNEL: Property<String> = newProperty("leak-log-channel", "0")
+    val LEAK_LOG_CHANNEL: Property<String> = newProperty("channel.leak-log", "0")
 
     @JvmField
-    val MESSAGE_LOG_CHANNEL: Property<String> = newProperty("message-log-channel", "0")
+    val MESSAGE_LOG_CHANNEL: Property<String> = newProperty("channel.message-log", "0")
 
     @JvmField
-    val MEMBER_ROLE: Property<String> = newProperty("member-role", "0")
+    val REMINDER_CHANNEL: Property<String> = newProperty("channel.reminder", "0")
 
     @JvmField
-    val PLUGINS_ROLE: Property<String> = newProperty("plugins-role", "0")
+    val MEMBER_ROLE: Property<String> = newProperty("role.member", "0")
 
     @JvmField
-    val PINGS_ROLE: Property<String> = newProperty("pings-role", "0")
+    val PLUGINS_ROLE: Property<String> = newProperty("role.plugins", "0")
+
+    @JvmField
+    val PINGS_ROLE: Property<String> = newProperty("role.pings", "0")
+
+    @JvmField
+    val ADMIN_ROLE: Property<String> = newProperty("role.admin", "496353695605456897")
 
     @JvmField
     val SQL_HOST: Property<String> = newProperty("database.host", "localhost")
@@ -41,6 +47,9 @@ object Setting : SettingsHolder {
     val SQL_DATABASE: Property<String> = newProperty("database.database", "matt")
 
     @JvmField
+    val DIALOGFLOW_PROJECT: Property<String> = newProperty("dialogflow-project", "")
+
+    @JvmField
     val FAQ_COMMANDS: Property<MutableList<String>> = newListProperty("faq-commands")
 
     @JvmField
@@ -48,5 +57,8 @@ object Setting : SettingsHolder {
 
     @JvmField
     val LEAK_WORDS: Property<MutableList<String>> = newListProperty("leak-words")
+
+    @JvmField
+    val BLACK_LISTED_CHANNELS: Property<MutableList<String>> = newListProperty("black-listed-channels")
 
 }

@@ -1,4 +1,4 @@
-package me.mattstudios.kipp.scanners
+package me.mattstudios.kipp.scanner
 
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.settings.Config
@@ -13,7 +13,7 @@ import java.net.URL
 /**
  * @author Matt
  */
-class Scanner(
+class PasteScanner(
         private val config: Config,
         private val cache: Cache
 ) {

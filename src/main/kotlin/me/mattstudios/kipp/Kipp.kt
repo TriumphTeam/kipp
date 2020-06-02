@@ -9,6 +9,7 @@ import me.mattstudios.kipp.commands.admin.defaults.SetLeakChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetMessagesChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
+import me.mattstudios.kipp.commands.admin.sync.UpdateMessages
 import me.mattstudios.kipp.commands.member.Faq
 import me.mattstudios.kipp.commands.member.Paste
 import me.mattstudios.kipp.commands.member.Todo
@@ -16,6 +17,7 @@ import me.mattstudios.kipp.commands.member.WhoIs
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.listeners.JoinListener
+import me.mattstudios.kipp.listeners.KippListener
 import me.mattstudios.kipp.listeners.MessageLogListener
 import me.mattstudios.kipp.listeners.MessagePasteListener
 import me.mattstudios.kipp.listeners.PasteConversionListener
@@ -101,7 +103,7 @@ class Kipp {
      */
     private fun registerRequirements() {
         commandManager.registerRequirement("#admin-up") { member ->
-            val adminRole = jda.getRoleById(496353695605456897) ?: return@registerRequirement false
+            val adminRole = cache.adminRole ?: return@registerRequirement false
             return@registerRequirement member.roles.any { role -> role.position >= adminRole.position }
         }
     }
@@ -131,6 +133,7 @@ class Kipp {
                 Todo(todoManager),
 
                 UpdateDb(database),
+                UpdateMessages(database),
                 SyncRoles(cache),
 
                 SetJoinChannel(config, cache),
@@ -172,10 +175,11 @@ class Kipp {
      */
     private fun registerListeners() {
         val listeners = listOf(
-                JoinListener(config, cache, database),
+                JoinListener(cache, database),
                 PasteConversionListener(jda),
                 MessagePasteListener(config, cache),
-                MessageLogListener(config, cache)
+                MessageLogListener(config, cache, database),
+                KippListener(cache, config)
         )
 
         logger.info("Registering ${listeners.size} listeners..")
