@@ -51,6 +51,7 @@ allprojects {
         // Google's shit
         implementation "com.google.cloud:google-cloud-dialogflow:2.0.0"
         implementation "com.google.cloud:google-cloud-storage:1.108.0"
+        implementation "com.google.code.gson:gson:2.8.6"
     }
 
     sourceCompatibility = JavaVersion.VERSION_1_8

@@ -20,6 +20,9 @@ import javax.net.ssl.HttpsURLConnection
 
 object Utils {
 
+    // TODO add more services
+    private val pasteServices = listOf("pastebin.com", "hastebin.com", "paste.helpch.at")
+
     // Pattern to identify URLs in the message
     private val urlPattern = Pattern.compile(
             "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
@@ -40,7 +43,17 @@ object Utils {
      * Reads the content of an input stream and turns it into a string
      */
     fun URL.readContent(charset: Charset = Charsets.UTF_8) = openStream().bufferedReader(charset).use { it.readText() }
-    
+
+    /**
+     * Checks if the link is a paste or not
+     */
+    fun URL.isPaste() = pasteServices.any { it in this.host }
+
+    /**
+     * Appends a text to the URL
+     */
+    fun URL.append(string: String): URL = if (this.path == null || "/raw" in this.path) this else URL(this, string + this.path)
+
     /**
      * Gets the color from HEX code
      */

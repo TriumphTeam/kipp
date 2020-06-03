@@ -1,5 +1,6 @@
 package me.mattstudios.kipp.data
 
+import com.google.gson.Gson
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers.IO
@@ -17,6 +18,7 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.User
 import java.sql.SQLException
 import java.util.concurrent.TimeUnit
 import kotlin.system.measureTimeMillis
@@ -28,6 +30,7 @@ import kotlin.system.measureTimeMillis
 class Database(private val config: Config) {
 
     private val dataSource: HikariDataSource
+    private val gson = Gson()
 
     init {
         val hikariConfig = HikariConfig()
@@ -151,6 +154,20 @@ class Database(private val config: Config) {
                 preparedStatement.setLong(1, message.idLong)
                 preparedStatement.setString(2, message.contentDisplay)
                 preparedStatement.setLong(3, message.author.idLong)
+
+                preparedStatement.executeUpdate()
+            }
+        }
+    }
+
+    suspend fun insertFaq(command: String, jsonEmbed: JsonEmbed, author: User) {
+        withContext(IO) {
+            dataSource.connection.use { connection ->
+                val preparedStatement = connection.prepareStatement("replace into faqs(command, embed, creator_id) values (?, ?, ?)")
+
+                preparedStatement.setString(1, command)
+                preparedStatement.setString(2, gson.toJson(jsonEmbed))
+                preparedStatement.setLong(3, author.idLong)
 
                 preparedStatement.executeUpdate()
             }

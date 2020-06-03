@@ -63,6 +63,11 @@ class Embed(user: User? = null, timestamp: Boolean = false) {
         return this
     }
 
+    fun field(field: MessageEmbed.Field): Embed {
+        embed.addField(field)
+        return this
+    }
+
     fun field(title: String, body: String, inline: Boolean): Embed {
         embed.addField(title, body, inline)
         return this

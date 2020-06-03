@@ -3,15 +3,13 @@ package me.mattstudios.kipp
 import me.mattstudios.kipp.commands.admin.FaqsManage
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.TodoManage
+import me.mattstudios.kipp.commands.admin.defaults.SetDefaultChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
-import me.mattstudios.kipp.commands.admin.defaults.SetJoinChannel
-import me.mattstudios.kipp.commands.admin.defaults.SetLeakChannel
-import me.mattstudios.kipp.commands.admin.defaults.SetMessagesChannel
-import me.mattstudios.kipp.commands.admin.defaults.SetReminderChannel
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.admin.sync.UpdateMessages
 import me.mattstudios.kipp.commands.member.Faq
+import me.mattstudios.kipp.commands.member.Help
 import me.mattstudios.kipp.commands.member.Paste
 import me.mattstudios.kipp.commands.member.Todo
 import me.mattstudios.kipp.commands.member.WhoIs
@@ -23,6 +21,7 @@ import me.mattstudios.kipp.listeners.MessageLogListener
 import me.mattstudios.kipp.listeners.MessagePasteListener
 import me.mattstudios.kipp.listeners.PasteConversionListener
 import me.mattstudios.kipp.listeners.StatusListener
+import me.mattstudios.kipp.listeners.SuggestionsBugsListener
 import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.manager.TodoManager
 import me.mattstudios.kipp.scheduler.Scheduler
@@ -39,6 +38,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URL
 
 
 /**
@@ -127,23 +127,21 @@ class Kipp {
     private fun registerCommands() {
         val commands = listOf(
                 Purge(),
-                FaqsManage(faqManager),
+                FaqsManage(faqManager, database),
                 TodoManage(todoManager),
 
                 WhoIs(database),
                 Paste(),
                 Faq(faqManager),
                 Todo(todoManager),
+                Help(),
 
                 UpdateDb(database),
                 UpdateMessages(database),
                 SyncRoles(cache),
 
-                SetJoinChannel(config, cache),
-                SetDefaultRole(config, cache),
-                SetLeakChannel(config, cache),
-                SetMessagesChannel(config, cache),
-                SetReminderChannel(config, cache)
+                SetDefaultChannel(config, cache),
+                SetDefaultRole(config, cache)
         )
 
         logger.info("Registering ${commands.size} commands..")
@@ -172,6 +170,10 @@ class Kipp {
             return@registerParameter TypeResult(guild.getTextChannelById(numericArg), argument)
         }
 
+        commandManager.registerParameter(URL::class.java) { argument ->
+            if (argument == null) TypeResult(argument)
+            else TypeResult(URL(argument.toString()), argument)
+        }
     }
 
     /**
@@ -183,7 +185,8 @@ class Kipp {
                 PasteConversionListener(jda),
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
-                KippListener(cache, config, scheduler)
+                KippListener(cache, config, scheduler),
+                SuggestionsBugsListener(cache)
         )
 
         logger.info("Registering ${listeners.size} listeners..")

@@ -23,6 +23,12 @@ object Setting : SettingsHolder {
     val REMINDER_CHANNEL: Property<String> = newProperty("channel.reminder", "0")
 
     @JvmField
+    val SUGGESTIONS_CHANNEL: Property<String> = newProperty("channel.suggestions", "0")
+
+    @JvmField
+    val BUGS_CHANNEL: Property<String> = newProperty("channel.bugs", "0")
+
+    @JvmField
     val MEMBER_ROLE: Property<String> = newProperty("role.member", "0")
 
     @JvmField

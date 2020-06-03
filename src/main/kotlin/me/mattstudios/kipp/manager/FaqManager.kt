@@ -1,8 +1,8 @@
 package me.mattstudios.kipp.manager
 
+import me.mattstudios.kipp.data.JsonEmbed
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
-import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.base.CommandBuilder
 import me.mattstudios.mfjda.base.CommandManager
@@ -24,22 +24,17 @@ class FaqManager(
      * Registers all the faq commands from the config
      */
     fun registerAll() {
-        for (faq in config[Setting.FAQ_COMMANDS]) {
+        /*for (faq in config[Setting.FAQ_COMMANDS]) {
             val (command, title, body) = regex.matchEntire(faq)?.destructured ?: continue
             registerCommand(command, title, body)
-        }
+        }*/
     }
 
     /**
      * Creates a new faq
      */
-    fun createFaq(command: String, title: String, body: String) {
-        val faqs = mutableListOf<String>()
-        faqs.addAll(config[Setting.FAQ_COMMANDS])
-        faqs.add("[$command] $title $body")
-        config[Setting.FAQ_COMMANDS] = faqs
-
-        registerCommand(command, title, body)
+    fun createFaq(jsonEmbed: JsonEmbed) {
+        registerCommand(jsonEmbed)
     }
 
     /**
@@ -68,21 +63,16 @@ class FaqManager(
     /**
      * Registers the faq command
      */
-    private fun registerCommand(command: String, title: String, body: String) {
-        commands.add(command)
-        val image = imageRegex.find(body)?.destructured?.component1()
-        val thumbnail = thumbnailRegex.find(body)?.destructured?.component1()
-        val embed = Embed()
+    private fun registerCommand(jsonEmbed: JsonEmbed) {
+        commands.add(jsonEmbed.command)
 
-        if (image != null) embed.image(image)
-        if (thumbnail != null) embed.thumbnail(thumbnail)
-
-        val faqMessage = embed.field(title.replace('_', ' '), body.escapeLine()).build()
         val faqCommand = CommandBuilder()
                 .setPrefix("?")
-                .setCommand(command)
+                .setCommand(jsonEmbed.command)
                 .setArgumentsLimit(0)
-                .setExecutor { _, message -> message.textChannel.queueMessage(faqMessage) }
+                .setExecutor { _, message ->
+                    message.textChannel.queueMessage(jsonEmbed.toEmbed(message.author))
+                }
                 .build()
 
         commandManager.register(faqCommand)

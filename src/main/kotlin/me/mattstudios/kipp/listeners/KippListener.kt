@@ -65,7 +65,6 @@ class KippListener(
 
             when (response[0]) {
                 "reminder" -> handleReminder(response.drop(1), user, channel)
-                else -> channel.queueMessage(Embed(user).description("I do not recognize that command!").build())
             }
         }
 
@@ -99,6 +98,8 @@ class KippListener(
 
         channel.queueMessage(Embed(user).description("Sure thing ${user.asMention}, I'll remind you to `$task`!").build())
 
+
+        // TODO THIS IS SHIT, I GOTTA REDO THIS LATER
         val mainReminders = mutableListOf<String>()
         mainReminders.addAll(config[Setting.REMINDERS])
         val reminder = "[${Utils.dateFormat.format(date)}|${user.id}] $task"

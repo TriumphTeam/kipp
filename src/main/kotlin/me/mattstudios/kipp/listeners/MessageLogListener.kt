@@ -17,7 +17,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 /**
  * @author Matt
  */
-class MessageLogListener(private val config: Config, private val cache: Cache, private val database: Database) : ListenerAdapter() {
+class MessageLogListener(
+        private val config: Config,
+        private val cache: Cache,
+        private val database: Database
+) : ListenerAdapter() {
 
     /**
      * Adds message to the database
