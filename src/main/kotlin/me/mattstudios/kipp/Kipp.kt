@@ -8,7 +8,6 @@ import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.admin.sync.UpdateMessages
-import me.mattstudios.kipp.commands.member.Faq
 import me.mattstudios.kipp.commands.member.Help
 import me.mattstudios.kipp.commands.member.Paste
 import me.mattstudios.kipp.commands.member.Todo
@@ -31,11 +30,11 @@ import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.base.CommandManager
 import me.mattstudios.mfjda.base.components.TypeResult
 import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import org.apache.commons.validator.routines.UrlValidator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -117,8 +116,8 @@ class Kipp {
     private fun registerMessages() {
         commandManager.registerMessage("cmd.no.permission") {}
         // TODO this ones
-        commandManager.registerMessage("cmd.no.exists") { channel -> channel.queueMessage("Command doesn't exist") }
-        commandManager.registerMessage("cmd.wrong.usage") { channel -> channel.queueMessage("Wrong usage") }
+        commandManager.registerMessage("cmd.no.exists") { message -> message.textChannel.queueMessage("Command doesn't exist") }
+        commandManager.registerMessage("cmd.wrong.usage") { message -> message.textChannel.queueMessage("Wrong usage") }
     }
 
     /**
@@ -132,7 +131,7 @@ class Kipp {
 
                 WhoIs(database),
                 Paste(),
-                Faq(faqManager),
+                //Faq(faqManager),
                 Todo(todoManager),
                 Help(),
 
@@ -153,25 +152,17 @@ class Kipp {
      * Registers the requirements for the bot commands
      */
     private fun registerParameters() {
-        commandManager.registerParameter(Int::class.java) { argument -> TypeResult(argument.toString().toIntOrNull(), argument) }
-        commandManager.registerParameter(Role::class.java) { argument -> TypeResult(jda.getRoleById(argument.toString()), argument) }
+        commandManager.registerParameter(Int::class.java) { argument, _ -> TypeResult(argument.toString().toIntOrNull(), argument) }
+        commandManager.registerParameter(Role::class.java) { argument, _ -> TypeResult(jda.getRoleById(argument.toString()), argument) }
 
-        commandManager.registerParameter(Member::class.java) { argument ->
-            if (argument == null) return@registerParameter TypeResult(argument)
-            val numericArg = argument.toString().replace(("[^\\d]").toRegex(), "")
-            val guild = jda.guilds.firstOrNull() ?: return@registerParameter TypeResult(argument)
-            return@registerParameter TypeResult(guild.getMemberById(numericArg), argument)
-        }
-
-        commandManager.registerParameter(TextChannel::class.java) { argument ->
-            if (argument == null) return@registerParameter TypeResult(argument)
-            val numericArg = argument.toString().replace(("[^\\d]").toRegex(), "")
-            val guild = jda.guilds.firstOrNull() ?: return@registerParameter TypeResult(argument)
-            return@registerParameter TypeResult(guild.getTextChannelById(numericArg), argument)
-        }
-
-        commandManager.registerParameter(URL::class.java) { argument ->
+        commandManager.registerParameter(TextChannel::class.java) { argument, guild ->
             if (argument == null) TypeResult(argument)
+            else TypeResult(guild.getTextChannelById(argument.toString().replace(("[^\\d]").toRegex(), "")), argument)
+        }
+
+        commandManager.registerParameter(URL::class.java) { argument, _ ->
+            if (argument == null) TypeResult(argument)
+            else if (!UrlValidator.getInstance().isValid(argument.toString())) TypeResult(argument)
             else TypeResult(URL(argument.toString()), argument)
         }
     }

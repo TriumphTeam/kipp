@@ -43,7 +43,7 @@ allprojects {
         implementation "mysql:mysql-connector-java:8.0.20"
 
         // My stuff
-        implementation "me.mattstudios.utils:matt-framework-jda:1.1.7-BETA"
+        implementation "me.mattstudios.utils:matt-framework-jda:1.1.9-BETA"
 
         // Config
         implementation "ch.jalu:configme:1.1.0"
@@ -52,6 +52,8 @@ allprojects {
         implementation "com.google.cloud:google-cloud-dialogflow:2.0.0"
         implementation "com.google.cloud:google-cloud-storage:1.108.0"
         implementation "com.google.code.gson:gson:2.8.6"
+
+        implementation "commons-validator:commons-validator:1.6"
     }
 
     sourceCompatibility = JavaVersion.VERSION_1_8
