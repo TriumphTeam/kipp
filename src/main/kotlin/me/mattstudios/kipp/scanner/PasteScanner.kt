@@ -1,5 +1,6 @@
 package me.mattstudios.kipp.scanner
 
+import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
@@ -22,7 +23,13 @@ class PasteScanner(
      * Handles the leak search for the paste
      */
     fun searchForLeaks(paste: URL, message: Message, originalLink: URL): Boolean {
-        val channel = cache.leakChannel ?: return false
+        val channel = cache.leakChannel
+
+        if (channel == null) {
+            Kipp.logger.warn("LEAK DETECTED WITHOUT THE LEAKS CHANNEL BEING SET!")
+            return false
+        }
+
         val leakWords = config[Setting.LEAK_WORDS]
 
         val pasteContent = paste.readContent()

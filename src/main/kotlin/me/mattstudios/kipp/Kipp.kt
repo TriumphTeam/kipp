@@ -1,6 +1,5 @@
 package me.mattstudios.kipp
 
-import me.mattstudios.kipp.commands.admin.FaqsManage
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.TodoManage
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultChannel
@@ -8,6 +7,7 @@ import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.admin.sync.UpdateMessages
+import me.mattstudios.kipp.commands.common.Faqs
 import me.mattstudios.kipp.commands.member.Help
 import me.mattstudios.kipp.commands.member.Paste
 import me.mattstudios.kipp.commands.member.Todo
@@ -83,7 +83,7 @@ class Kipp {
     // The command manager
     private val commandManager = CommandManager(jda)
 
-    private val faqManager = FaqManager(commandManager, config)
+    private val faqManager = FaqManager(commandManager, database)
     private val todoManager = TodoManager(config)
     private val scheduler = Scheduler(jda, config, cache)
 
@@ -126,7 +126,7 @@ class Kipp {
     private fun registerCommands() {
         val commands = listOf(
                 Purge(),
-                FaqsManage(faqManager, database),
+                Faqs(faqManager, database),
                 TodoManage(todoManager),
 
                 WhoIs(database),

@@ -1,9 +1,12 @@
-package me.mattstudios.kipp.commands.admin
+package me.mattstudios.kipp.commands.common
 
 import com.google.gson.Gson
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.data.JsonEmbed
 import me.mattstudios.kipp.manager.FaqManager
+import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils.append
@@ -22,7 +25,7 @@ import java.net.URL
  */
 @Prefix("?")
 @Command("faq")
-class FaqsManage(
+class Faqs(
         private val faqManager: FaqManager,
         private val database: Database
 ) : CommandBase() {
@@ -38,32 +41,44 @@ class FaqsManage(
     @SubCommand("create")
     @Requirement("#admin-up")
     fun createFaq(link: URL?) {
-        message.channel.queueMessage("create")
-        if (link == null) return
-        if (!link.isPaste()) return
+        if (link == null || !link.isPaste()) {
+            message.textChannel.queueMessage("That is not a valid FAQ creator.")
+            return
+        }
         val paste = link.append("/raw")
 
         val pasteContent = paste.readContent()
 
         val jsonEmbed = gson.fromJson(pasteContent, JsonEmbed::class.java)
 
-        //GlobalScope.launch { database.insertFaq(jsonEmbed.command, jsonEmbed, message.author) }
+        val command = jsonEmbed.command
 
-        /*faqManager.createFaq(jsonEmbed)
+        if (command == null || command == "faq" || command in faqManager.getFaqs()) {
+            message.textChannel.queueMessage(
+                    Embed(message.author)
+                            .color(Color.FAIL)
+                            .field("FAQ was not created!", "The paste doesn't have a command or command already exists!")
+                            .build()
+            )
+            return
+        }
+
+        GlobalScope.launch { database.insertFaq(jsonEmbed.command, jsonEmbed, message.author) }
+
+        faqManager.createFaq(jsonEmbed)
 
         message.textChannel.queueMessage(
                 Embed(message.author)
                         .color(Color.SUCCESS)
                         .field("FAQ created successfully!", "The new FAQ is `?${jsonEmbed.command}`.")
                         .build()
-        )*/
+        )
     }
 
     @SubCommand("remove")
     @Requirement("#admin-up")
     fun deleteFaq(command: String) {
-        message.channel.queueMessage("remove")
-        /*val removeEmbed = Embed(message.author)
+        val removeEmbed = Embed(message.author)
 
         if (faqManager.delete(command)) {
             removeEmbed
@@ -75,12 +90,12 @@ class FaqsManage(
                     .field("FAQ delete", "The FAQ `?$command` does not exist or an error occurred while deleting it!")
         }
 
-        message.textChannel.queueMessage(removeEmbed.build())*/
+        message.textChannel.queueMessage(removeEmbed.build())
     }
 
     /**
      * Appends the list with `?` around and joins it with ", "
      */
-    private fun List<String>.joinAndAppend() = this.joinToString(", ") { "`?$it`" }
+    private fun List<String>.joinAndAppend() = this.joinToString(", ") { "`$it`" }
 
 }

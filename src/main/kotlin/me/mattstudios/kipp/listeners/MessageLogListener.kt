@@ -2,6 +2,7 @@ package me.mattstudios.kipp.listeners
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.settings.Config
@@ -35,7 +36,13 @@ class MessageLogListener(
      * Handles message deletions
      */
     override fun onGuildMessageDelete(event: GuildMessageDeleteEvent) {
-        val channel = cache.messageChannel ?: return
+        val channel = cache.messageChannel
+
+        if (channel == null) {
+            Kipp.logger.warn("MESSAGE LOG CHANNEL ISN'T SET!")
+            return
+        }
+
         val message = database.getMessage(event.messageIdLong) ?: return
         val authorId = database.getMessageAuthor(event.messageIdLong) ?: return
 

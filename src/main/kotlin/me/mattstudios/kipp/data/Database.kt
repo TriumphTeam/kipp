@@ -49,6 +49,9 @@ class Database(private val config: Config) {
         hikariConfig.addDataSourceProperty("cacheServerConfiguration", true)
         hikariConfig.addDataSourceProperty("elideSetAutoCommits", true)
         hikariConfig.addDataSourceProperty("maintainTimeStats", false)
+        hikariConfig.addDataSourceProperty("characterEncoding", "utf8")
+        hikariConfig.addDataSourceProperty("useUnicode", "true")
+        hikariConfig.connectionInitSql = "SET NAMES 'utf8mb4'"
 
         dataSource = HikariDataSource(hikariConfig)
 
@@ -160,6 +163,9 @@ class Database(private val config: Config) {
         }
     }
 
+    /**
+     * Inserts a faq into the database
+     */
     suspend fun insertFaq(command: String, jsonEmbed: JsonEmbed, author: User) {
         withContext(IO) {
             dataSource.connection.use { connection ->
@@ -221,6 +227,33 @@ class Database(private val config: Config) {
 
             while (resultSet.next()) return@use resultSet.getLong("author")
             return@use null
+        }
+    }
+
+    /**
+     * Gets a list of faq's that was stored in the database
+     */
+    fun getFaqs(): List<JsonEmbed> {
+        val list = mutableListOf<JsonEmbed>()
+
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("select embed from faqs")
+            val resultSet = preparedStatement.executeQuery()
+
+            while (resultSet.next()) list.add(gson.fromJson(resultSet.getString("embed"), JsonEmbed::class.java))
+        }
+
+        return list
+    }
+
+    /**
+     * Deletes the faq from the database
+     */
+    fun deleteFaq(faq: String) {
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("delete from faqs where command = ?")
+            preparedStatement.setString(1, faq)
+            preparedStatement.executeUpdate()
         }
     }
 

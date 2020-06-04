@@ -70,6 +70,9 @@ class KippListener(
 
     }
 
+    /**
+     * Handles the dialog flow request
+     */
     private suspend fun handleDialogFlow(message: String): String {
         return withContext(Dispatchers.IO) {
             Kipp.logger.info("Dialog flow requested!")
@@ -80,6 +83,9 @@ class KippListener(
         }
     }
 
+    /**
+     * Handles the reminder stuff
+     */
     private fun handleReminder(response: List<String>, user: User, channel: TextChannel) {
         if (response.isEmpty()) return
 

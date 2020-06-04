@@ -20,9 +20,9 @@ class Help : CommandBase() {
                 .field(
                         "Available commands:",
                         "**!paste** - Gives you the link to HelpChat's paste\n" +
-                        "**!faq** - Shows a list of available FAQs\n" +
                         "**!todo** - Display Matt's TO-DO list\n" +
-                        "**!whois** - Displays information about a player"
+                        "**!whois** - Displays information about a player\n"+
+                        "**?faq** - Shows a list of available FAQs"
                 )
                 .build()
         message.textChannel.queueMessage(helpMessage)

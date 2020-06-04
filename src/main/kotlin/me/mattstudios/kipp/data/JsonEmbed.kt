@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.User
  * @author Matt
  */
 data class JsonEmbed(
-        val command: String,
+        val command: String?,
         private val title: String? = null,
         private val description: String? = null,
         private val fields: MutableMap<String, JsonField>? = null,

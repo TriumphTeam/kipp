@@ -1,5 +1,6 @@
 package me.mattstudios.kipp.scheduler
 
+import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
@@ -27,7 +28,13 @@ class Scheduler(jda: JDA, config: Config, cache: Cache) {
             val user = jda.getUserById(userId) ?: continue
 
             val date = Utils.dateFormat.parse(dateArg)
-            val channel = cache.reminderChannel ?: continue
+            val channel = cache.reminderChannel
+
+            if (channel == null) {
+                Kipp.logger.warn("REMINDER ADDED WITHOUT REMINDER CHANNEL BEING SET!")
+                continue
+            }
+
             scheduleTask(date) {
                 channel.queueMessage(
                         Embed().description(
