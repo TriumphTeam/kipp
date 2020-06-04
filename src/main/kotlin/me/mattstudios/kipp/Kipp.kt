@@ -2,6 +2,7 @@ package me.mattstudios.kipp
 
 import me.mattstudios.kipp.commands.admin.Message
 import me.mattstudios.kipp.commands.admin.Purge
+import me.mattstudios.kipp.commands.admin.Status
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
 import me.mattstudios.kipp.commands.admin.defaults.SetSettings
@@ -89,6 +90,8 @@ class Kipp {
     private val todoManager = TodoManager(database)
     private val scheduler = Scheduler(jda, config, cache)
 
+    private val startTime = System.currentTimeMillis()
+
     /**
      * Calls all the registers
      */
@@ -129,6 +132,7 @@ class Kipp {
         val commands = listOf(
                 Purge(),
                 Message(),
+                Status(startTime),
 
                 Faq(faqManager, database),
                 Todo(todoManager),

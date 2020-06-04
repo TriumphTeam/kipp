@@ -7,6 +7,7 @@ import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Prefix
+import me.mattstudios.mfjda.annotations.Requirement
 import me.mattstudios.mfjda.annotations.SubCommand
 import me.mattstudios.mfjda.base.CommandBase
 
@@ -30,6 +31,7 @@ class Todo(private val todoManager: TodoManager) : CommandBase() {
     }
 
     @SubCommand("add")
+    @Requirement("#admin-up")
     fun createTodo(id: String, args: Array<String>) {
         if (id in todoManager.getTodos().keys) {
             message.textChannel.queueMessage(
@@ -51,6 +53,7 @@ class Todo(private val todoManager: TodoManager) : CommandBase() {
     }
 
     @SubCommand("done")
+    @Requirement("#admin-up")
     fun removeTodo(id: String) {
         val removeEmbed = Embed(message.author)
 

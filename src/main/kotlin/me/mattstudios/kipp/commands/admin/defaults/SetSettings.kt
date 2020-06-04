@@ -7,6 +7,7 @@ import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Delete
 import me.mattstudios.mfjda.annotations.Prefix
+import me.mattstudios.mfjda.annotations.Requirement
 import me.mattstudios.mfjda.base.CommandBase
 
 /**
@@ -18,6 +19,7 @@ class SetSettings(private val config: Config, private val cache: Cache) : Comman
 
     @Default
     @Delete
+    @Requirement("#admin-up")
     fun settings(messageId: String) {
 
         val settingsMessage = message.textChannel.retrieveMessageById(messageId).complete() ?: return

@@ -77,5 +77,5 @@ allprojects {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    archiveFileName = "Bot-${project.version}.jar"
+    archiveFileName = "Kipp-${project.version}.jar"
 }
