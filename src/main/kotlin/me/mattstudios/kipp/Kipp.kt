@@ -1,5 +1,6 @@
 package me.mattstudios.kipp
 
+import me.mattstudios.kipp.commands.admin.Message
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
@@ -125,6 +126,7 @@ class Kipp {
     private fun registerCommands() {
         val commands = listOf(
                 Purge(),
+                Message(),
 
                 Faq(faqManager, database),
                 Todo(todoManager),
@@ -174,7 +176,7 @@ class Kipp {
                 PasteConversionListener(jda),
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
-                KippListener(cache, config, scheduler),
+                KippListener(cache, config, database, scheduler),
                 SuggestionsBugsListener(cache)
         )
 

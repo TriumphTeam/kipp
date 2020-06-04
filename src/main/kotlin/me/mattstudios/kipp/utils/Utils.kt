@@ -52,7 +52,12 @@ object Utils {
     /**
      * Appends a text to the URL
      */
-    fun URL.append(string: String): URL = if (this.path == null || "/raw" in this.path) this else URL(this, string + this.path)
+    fun URL.append(string: String) = if (this.path == null || "/raw" in this.path) this else URL(this, string + this.path)
+
+    /**
+     * Replaces the new lines
+     */
+    fun String.fixNewLine() = this.replace("\\n", "\n")
 
     /**
      * Gets the color from HEX code

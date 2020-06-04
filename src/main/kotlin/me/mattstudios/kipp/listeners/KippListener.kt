@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.data.Cache
+import me.mattstudios.kipp.data.Database
 import me.mattstudios.kipp.scheduler.Scheduler
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
@@ -29,6 +30,7 @@ import java.time.format.DateTimeParseException
 class KippListener(
         private val cache: Cache,
         private val config: Config,
+        private val database: Database,
         private val scheduler: Scheduler
 ) : ListenerAdapter() {
 
@@ -104,13 +106,9 @@ class KippListener(
 
         channel.queueMessage(Embed(user).description("Sure thing ${user.asMention}, I'll remind you to `$task`!").build())
 
+        database.insertReminder(date, user.idLong, task)
 
-        // TODO THIS IS SHIT, I GOTTA REDO THIS LATER
-        val mainReminders = mutableListOf<String>()
-        mainReminders.addAll(config[Setting.REMINDERS])
-        val reminder = "[${Utils.dateFormat.format(date)}|${user.id}] $task"
-        mainReminders.add(reminder)
-        config[Setting.REMINDERS] = mainReminders
+        // TODO fix the reminders and add TIME ZONE
 
         val reminderChannel = cache.reminderChannel ?: return
 
@@ -123,11 +121,6 @@ class KippListener(
                             "\n```")
                             .build()
             )
-
-            val reminders = mutableListOf<String>()
-            reminders.addAll(config[Setting.REMINDERS])
-            reminders.remove(reminder)
-            config[Setting.REMINDERS] = reminders
         }
     }
 

@@ -169,49 +169,43 @@ class Database(private val config: Config) {
      * Inserts a faq into the database
      */
     suspend fun insertFaq(command: String, jsonEmbed: JsonEmbed, author: User) {
-        withContext(IO) {
-            dataSource.connection.use { connection ->
-                val preparedStatement = connection.prepareStatement("replace into faqs(command, embed, creator_id) values (?, ?, ?)")
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("replace into faqs(command, embed, creator_id) values (?, ?, ?)")
 
-                preparedStatement.setString(1, command)
-                preparedStatement.setString(2, gson.toJson(jsonEmbed))
-                preparedStatement.setLong(3, author.idLong)
+            preparedStatement.setString(1, command)
+            preparedStatement.setString(2, gson.toJson(jsonEmbed))
+            preparedStatement.setLong(3, author.idLong)
 
-                preparedStatement.executeUpdate()
-            }
+            preparedStatement.executeUpdate()
         }
     }
 
     /**
      * Inserts a to-do into the database
      */
-    suspend fun insertTodo(id: String, todo: String) {
-        withContext(IO) {
-            dataSource.connection.use { connection ->
-                val preparedStatement = connection.prepareStatement("replace into todos(todo_id, todo) values (?, ?)")
+    fun insertTodo(id: String, todo: String) {
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("replace into todos(todo_id, todo) values (?, ?)")
 
-                preparedStatement.setString(1, id)
-                preparedStatement.setString(2, todo)
+            preparedStatement.setString(1, id)
+            preparedStatement.setString(2, todo)
 
-                preparedStatement.executeUpdate()
-            }
+            preparedStatement.executeUpdate()
         }
     }
 
     /**
      * Insert a reminder into the database
      */
-    suspend fun insertReminder(date: Date, userId: Long, reminder: String) {
-        withContext(IO) {
-            dataSource.connection.use { connection ->
-                val preparedStatement = connection.prepareStatement("insert into reminders(date, reminder, user) values (?, ?, ?)")
+    fun insertReminder(date: Date, userId: Long, reminder: String) {
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("insert into reminders(date, reminder, user) values (?, ?, ?)")
 
-                preparedStatement.setObject(1, date.toInstant().atZone(ZoneId.of("Europe/Lisbon")).toLocalDateTime())
-                preparedStatement.setLong(2, userId)
-                preparedStatement.setString(3, reminder)
+            preparedStatement.setObject(1, date.toInstant().atZone(ZoneId.of("Europe/Lisbon")).toLocalDateTime())
+            preparedStatement.setString(2, reminder)
+            preparedStatement.setLong(3, userId)
 
-                preparedStatement.executeUpdate()
-            }
+            preparedStatement.executeUpdate()
         }
     }
 

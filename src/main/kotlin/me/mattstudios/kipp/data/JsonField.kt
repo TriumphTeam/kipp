@@ -1,5 +1,6 @@
 package me.mattstudios.kipp.data
 
+import me.mattstudios.kipp.utils.Utils.fixNewLine
 import net.dv8tion.jda.api.entities.MessageEmbed
 
 /**
@@ -14,6 +15,6 @@ data class JsonField(
     /**
      * Turns the json field into a message embed field
      */
-    fun toField() = MessageEmbed.Field(title, body, inline)
+    fun toField() = MessageEmbed.Field(title.fixNewLine(), body.fixNewLine(), inline)
 
 }

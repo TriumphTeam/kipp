@@ -1,6 +1,7 @@
 package me.mattstudios.kipp.data
 
 import me.mattstudios.kipp.utils.Embed
+import me.mattstudios.kipp.utils.Utils.fixNewLine
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
 
@@ -22,8 +23,8 @@ data class JsonEmbed(
     fun toEmbed(user: User? = null): MessageEmbed {
         val embed = Embed(user)
 
-        if (title != null) embed.title(title)
-        if (description != null) embed.description(description)
+        if (title != null) embed.title(title.fixNewLine())
+        if (description != null) embed.description(description.fixNewLine())
         if (image != null) embed.image(image)
         if (thumbnail != null) embed.thumbnail(thumbnail)
 
