@@ -4,6 +4,7 @@ import me.mattstudios.kipp.commands.admin.Message
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultChannel
 import me.mattstudios.kipp.commands.admin.defaults.SetDefaultRole
+import me.mattstudios.kipp.commands.admin.defaults.SetSettings
 import me.mattstudios.kipp.commands.admin.sync.SyncRoles
 import me.mattstudios.kipp.commands.admin.sync.UpdateDb
 import me.mattstudios.kipp.commands.admin.sync.UpdateMessages
@@ -140,7 +141,8 @@ class Kipp {
                 SyncRoles(cache),
 
                 SetDefaultChannel(config, cache),
-                SetDefaultRole(config, cache)
+                SetDefaultRole(config, cache),
+                SetSettings(config, cache)
         )
 
         logger.info("Registering ${commands.size} commands..")
@@ -165,6 +167,7 @@ class Kipp {
             else if (!UrlValidator.getInstance().isValid(argument.toString())) TypeResult(argument)
             else TypeResult(URL(argument.toString()), argument)
         }
+
     }
 
     /**

@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.mattstudios.kipp.data.Database
-import me.mattstudios.kipp.data.JsonEmbed
+import me.mattstudios.kipp.json.JsonEmbed
 import me.mattstudios.kipp.manager.FaqManager
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed

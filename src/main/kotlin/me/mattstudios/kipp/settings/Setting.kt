@@ -35,10 +35,22 @@ object Setting : SettingsHolder {
     val PLUGINS_ROLE: Property<String> = newProperty("role.plugins", "0")
 
     @JvmField
-    val PINGS_ROLE: Property<String> = newProperty("role.pings", "0")
+    val PINGS_ROLE: Property<String> = newProperty("role.pings", "713927697679777802")
 
     @JvmField
     val ADMIN_ROLE: Property<String> = newProperty("role.admin", "496353695605456897")
+
+    @JvmField
+    val CCMD_ROLE: Property<String> = newProperty("role.ccmd", "713929371290959904")
+
+    @JvmField
+    val MF_ROLE: Property<String> = newProperty("role.mf", "713929424269082684")
+
+    @JvmField
+    val MATT_ROLE: Property<String> = newProperty("role.matt", "713929561603047466")
+
+    @JvmField
+    val SETTINGS_MESSAGE: Property<String> = newProperty("message.settings", "0")
 
     @JvmField
     val SQL_HOST: Property<String> = newProperty("database.host", "localhost")
@@ -56,15 +68,9 @@ object Setting : SettingsHolder {
     val DIALOGFLOW_PROJECT: Property<String> = newProperty("dialogflow-project", "")
 
     @JvmField
-    val TODOS: Property<MutableList<String>> = newListProperty("todos")
-
-    @JvmField
     val LEAK_WORDS: Property<MutableList<String>> = newListProperty("leak-words")
 
     @JvmField
     val BLACK_LISTED_CHANNELS: Property<MutableList<String>> = newListProperty("black-listed-channels")
-
-    @JvmField
-    val REMINDERS: Property<MutableList<String>> = newListProperty("reminders")
 
 }

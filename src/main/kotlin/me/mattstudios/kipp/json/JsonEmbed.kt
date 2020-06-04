@@ -1,7 +1,7 @@
-package me.mattstudios.kipp.data
+package me.mattstudios.kipp.json
 
 import me.mattstudios.kipp.utils.Embed
-import me.mattstudios.kipp.utils.Utils.fixNewLine
+import me.mattstudios.kipp.utils.Utils.fixLine
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
 
@@ -12,7 +12,7 @@ data class JsonEmbed(
         val command: String?,
         private val title: String? = null,
         private val description: String? = null,
-        private val fields: MutableMap<String, JsonField>? = null,
+        private val fields: List<JsonField>? = null,
         private val image: String? = null,
         private val thumbnail: String? = null
 ) {
@@ -23,12 +23,12 @@ data class JsonEmbed(
     fun toEmbed(user: User? = null): MessageEmbed {
         val embed = Embed(user)
 
-        if (title != null) embed.title(title.fixNewLine())
-        if (description != null) embed.description(description.fixNewLine())
+        if (title != null) embed.title(title.fixLine())
+        if (description != null) embed.description(description.fixLine())
         if (image != null) embed.image(image)
         if (thumbnail != null) embed.thumbnail(thumbnail)
 
-        fields?.forEach { _, jsonField -> embed.field(jsonField.toField()) }
+        fields?.forEach { embed.field(it.toField()) }
 
         return embed.build()
     }

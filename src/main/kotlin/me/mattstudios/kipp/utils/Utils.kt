@@ -57,7 +57,7 @@ object Utils {
     /**
      * Replaces the new lines
      */
-    fun String.fixNewLine() = this.replace("\\n", "\n")
+    fun String.fixLine() = this.replace("\\n", "\n")
 
     /**
      * Gets the color from HEX code

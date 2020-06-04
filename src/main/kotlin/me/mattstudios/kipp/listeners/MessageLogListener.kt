@@ -68,6 +68,8 @@ class MessageLogListener(
         val user = event.author
         val message = event.message
 
+        if (user.isBot) return
+
         val oldMessage = database.getMessage(event.messageIdLong)
 
         val embed = Embed().color(Color.EDIT)

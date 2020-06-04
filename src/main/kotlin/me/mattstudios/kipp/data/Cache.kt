@@ -26,10 +26,16 @@ class Cache(private val config: Config) : ListenerAdapter() {
     var pluginsRole: Role? = null
     var pingsRole: Role? = null
     var adminRole: Role? = null
+    var mattRole: Role? = null
+    var mfRole: Role? = null
+    var ccmdRole: Role? = null
 
     var yesEmote: Emote? = null
     var noEmote: Emote? = null
     var importantEmote: Emote? = null
+    var mattEmote: Emote? = null
+    var mfEmote: Emote? = null
+    var ccmdEmote: Emote? = null
 
     var invites = mutableListOf<Invite>()
 
@@ -51,10 +57,16 @@ class Cache(private val config: Config) : ListenerAdapter() {
         pluginsRole = guild.getRoleById(config[Setting.PLUGINS_ROLE])
         pingsRole = guild.getRoleById(config[Setting.PINGS_ROLE])
         adminRole = guild.getRoleById(config[Setting.ADMIN_ROLE])
+        mattRole = guild.getRoleById(config[Setting.MATT_ROLE])
+        mfRole = guild.getRoleById(config[Setting.MF_ROLE])
+        ccmdRole = guild.getRoleById(config[Setting.CCMD_ROLE])
 
         yesEmote = guild.getEmotesByName("yesmark", true).firstOrNull()
         noEmote = guild.getEmotesByName("nomark", true).firstOrNull()
         importantEmote = guild.getEmotesByName("important", true).firstOrNull()
+        mattEmote = guild.getEmotesByName("matt", true).firstOrNull()
+        mfEmote = guild.getEmotesByName("mf", true).firstOrNull()
+        ccmdEmote = guild.getEmotesByName("ccmd", true).firstOrNull()
     }
 
     /**

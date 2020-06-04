@@ -1,7 +1,7 @@
 package me.mattstudios.kipp.commands.admin
 
 import com.google.gson.Gson
-import me.mattstudios.kipp.data.JsonEmbed
+import me.mattstudios.kipp.json.JsonEmbed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.kipp.utils.Utils.append
 import me.mattstudios.kipp.utils.Utils.isPaste

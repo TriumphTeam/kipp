@@ -1,7 +1,7 @@
 package me.mattstudios.kipp.manager
 
 import me.mattstudios.kipp.data.Database
-import me.mattstudios.kipp.data.JsonEmbed
+import me.mattstudios.kipp.json.JsonEmbed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.base.CommandBuilder
 import me.mattstudios.mfjda.base.CommandManager

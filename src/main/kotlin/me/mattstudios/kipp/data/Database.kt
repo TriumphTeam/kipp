@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import me.mattstudios.kipp.Kipp
+import me.mattstudios.kipp.json.JsonEmbed
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.settings.Setting.BLACK_LISTED_CHANNELS
