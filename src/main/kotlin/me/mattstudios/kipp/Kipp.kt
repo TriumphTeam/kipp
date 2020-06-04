@@ -20,6 +20,7 @@ import me.mattstudios.kipp.listeners.KippListener
 import me.mattstudios.kipp.listeners.MessageLogListener
 import me.mattstudios.kipp.listeners.MessagePasteListener
 import me.mattstudios.kipp.listeners.PasteConversionListener
+import me.mattstudios.kipp.listeners.SettingsListener
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.listeners.SuggestionsBugsListener
 import me.mattstudios.kipp.manager.FaqManager
@@ -180,7 +181,8 @@ class Kipp {
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
                 KippListener(cache, config, database, scheduler),
-                SuggestionsBugsListener(cache)
+                SuggestionsBugsListener(cache),
+                SettingsListener(config, cache)
         )
 
         logger.info("Registering ${listeners.size} listeners..")

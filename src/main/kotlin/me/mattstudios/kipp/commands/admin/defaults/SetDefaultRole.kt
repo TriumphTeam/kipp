@@ -32,9 +32,9 @@ class SetDefaultRole(private val config: Config, private val cache: Cache) : Com
                 cache.pluginsRole = guild.getRoleById(roleId)
             }
 
-            "pings" -> {
-                config[Setting.PINGS_ROLE] = roleId
-                cache.pingsRole = guild.getRoleById(roleId)
+            "subscriptions" -> {
+                config[Setting.SUBSCRIPTIONS_ROLE] = roleId
+                cache.subscriptionsRole = guild.getRoleById(roleId)
             }
         }
     }

@@ -24,7 +24,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
 
     var memberRole: Role? = null
     var pluginsRole: Role? = null
-    var pingsRole: Role? = null
+    var subscriptionsRole: Role? = null
     var adminRole: Role? = null
     var mattRole: Role? = null
     var mfRole: Role? = null
@@ -55,7 +55,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
 
         memberRole = guild.getRoleById(config[Setting.MEMBER_ROLE])
         pluginsRole = guild.getRoleById(config[Setting.PLUGINS_ROLE])
-        pingsRole = guild.getRoleById(config[Setting.PINGS_ROLE])
+        subscriptionsRole = guild.getRoleById(config[Setting.SUBSCRIPTIONS_ROLE])
         adminRole = guild.getRoleById(config[Setting.ADMIN_ROLE])
         mattRole = guild.getRoleById(config[Setting.MATT_ROLE])
         mfRole = guild.getRoleById(config[Setting.MF_ROLE])

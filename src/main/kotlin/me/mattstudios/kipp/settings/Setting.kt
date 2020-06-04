@@ -35,7 +35,7 @@ object Setting : SettingsHolder {
     val PLUGINS_ROLE: Property<String> = newProperty("role.plugins", "0")
 
     @JvmField
-    val PINGS_ROLE: Property<String> = newProperty("role.pings", "713927697679777802")
+    val SUBSCRIPTIONS_ROLE: Property<String> = newProperty("role.subscriptions", "0713927697679777802")
 
     @JvmField
     val ADMIN_ROLE: Property<String> = newProperty("role.admin", "496353695605456897")
