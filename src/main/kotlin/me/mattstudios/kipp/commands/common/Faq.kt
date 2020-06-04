@@ -25,7 +25,7 @@ import java.net.URL
  */
 @Prefix("?")
 @Command("faq")
-class Faqs(
+class Faq(
         private val faqManager: FaqManager,
         private val database: Database
 ) : CommandBase() {

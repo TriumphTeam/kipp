@@ -1,35 +1,32 @@
 package me.mattstudios.kipp.manager
 
-import me.mattstudios.kipp.settings.Config
-import me.mattstudios.kipp.settings.Setting
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import me.mattstudios.kipp.data.Database
 
 /**
  * @author Matt
  */
-class TodoManager(private val config: Config) {
+class TodoManager(private val database: Database) {
 
-    fun create(todo: String) {
-        val todos = mutableListOf<String>()
-        todos.addAll(config[Setting.TODOS])
+    private val todos = mutableMapOf<String, String>()
 
-        todos.add(todo)
-        config[Setting.TODOS] = todos
+    init {
+        todos.putAll(database.getTodos())
     }
 
-    fun getTodos(): List<String> {
-        return config[Setting.TODOS]
+    fun create(id: String, todo: String) {
+        GlobalScope.launch { database.insertTodo(id, todo) }
+        todos[id] = todo
     }
 
-    fun remove(index: Int): Boolean {
-        val todos = mutableListOf<String>()
-        todos.addAll(config[Setting.TODOS])
+    fun getTodos(): Map<String, String> {
+        return todos
+    }
 
-        if (index > todos.size || index < 1) return false
-
-        todos.removeAt(index - 1)
-        config[Setting.TODOS] = todos
-
-        return true
+    fun remove(id: String) {
+        database.deleteTodo(id)
+        todos.remove(id)
     }
 
 }

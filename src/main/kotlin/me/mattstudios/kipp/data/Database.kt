@@ -20,6 +20,8 @@ import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import java.sql.SQLException
+import java.time.ZoneId
+import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.system.measureTimeMillis
 
@@ -147,7 +149,7 @@ class Database(private val config: Config) {
     }
 
     /**
-     * Insert the new member
+     * Insert the new message
      */
     suspend fun insertMessage(message: Message) {
         withContext(IO) {
@@ -174,6 +176,39 @@ class Database(private val config: Config) {
                 preparedStatement.setString(1, command)
                 preparedStatement.setString(2, gson.toJson(jsonEmbed))
                 preparedStatement.setLong(3, author.idLong)
+
+                preparedStatement.executeUpdate()
+            }
+        }
+    }
+
+    /**
+     * Inserts a to-do into the database
+     */
+    suspend fun insertTodo(id: String, todo: String) {
+        withContext(IO) {
+            dataSource.connection.use { connection ->
+                val preparedStatement = connection.prepareStatement("replace into todos(todo_id, todo) values (?, ?)")
+
+                preparedStatement.setString(1, id)
+                preparedStatement.setString(2, todo)
+
+                preparedStatement.executeUpdate()
+            }
+        }
+    }
+
+    /**
+     * Insert a reminder into the database
+     */
+    suspend fun insertReminder(date: Date, userId: Long, reminder: String) {
+        withContext(IO) {
+            dataSource.connection.use { connection ->
+                val preparedStatement = connection.prepareStatement("insert into reminders(date, reminder, user) values (?, ?, ?)")
+
+                preparedStatement.setObject(1, date.toInstant().atZone(ZoneId.of("Europe/Lisbon")).toLocalDateTime())
+                preparedStatement.setLong(2, userId)
+                preparedStatement.setString(3, reminder)
 
                 preparedStatement.executeUpdate()
             }
@@ -247,12 +282,50 @@ class Database(private val config: Config) {
     }
 
     /**
+     * Gets a to-do list that was stored in the database
+     */
+    fun getTodos(): Map<String, String> {
+        val list = mutableMapOf<String, String>()
+
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("select * from todos")
+            val resultSet = preparedStatement.executeQuery()
+
+            while (resultSet.next()) list[resultSet.getString("todo_id")] = resultSet.getString("todo")
+        }
+
+        return list
+    }
+
+    /**
      * Deletes the faq from the database
      */
     fun deleteFaq(faq: String) {
         dataSource.connection.use { connection ->
             val preparedStatement = connection.prepareStatement("delete from faqs where command = ?")
             preparedStatement.setString(1, faq)
+            preparedStatement.executeUpdate()
+        }
+    }
+
+    /**
+     * Deletes the faq from the database
+     */
+    fun deleteTodo(id: String) {
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("delete from todos where todo_id = ?")
+            preparedStatement.setString(1, id)
+            preparedStatement.executeUpdate()
+        }
+    }
+
+    /**
+     * Deletes the faq from the database
+     */
+    fun deleteReminder(id: String) {
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement("delete from todos where todo_id = ?")
+            preparedStatement.setString(1, id)
             preparedStatement.executeUpdate()
         }
     }

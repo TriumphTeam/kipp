@@ -2,6 +2,7 @@ package me.mattstudios.kipp.settings
 
 import ch.jalu.configme.SettingsManagerBuilder
 import ch.jalu.configme.properties.Property
+import ch.jalu.configme.resource.YamlFileResourceOptions
 import java.io.File
 
 /**
@@ -9,7 +10,16 @@ import java.io.File
  */
 class Config {
 
-    private val settingsManager = SettingsManagerBuilder.withYamlFile(File("config", "config.yml")).configurationData(Setting.javaClass).useDefaultMigrationService().create()
+    private val settingsManager = SettingsManagerBuilder
+            .withYamlFile(
+                    File("config", "config.yml"),
+                    YamlFileResourceOptions.builder()
+                            .indentationSize(2)
+                            .build()
+            )
+            .configurationData(Setting.javaClass)
+            .useDefaultMigrationService()
+            .create()
 
     /**
      * Gets the config property

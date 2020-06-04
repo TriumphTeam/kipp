@@ -56,9 +56,6 @@ object Setting : SettingsHolder {
     val DIALOGFLOW_PROJECT: Property<String> = newProperty("dialogflow-project", "")
 
     @JvmField
-    val FAQ_COMMANDS: Property<MutableList<String>> = newListProperty("faq-commands")
-
-    @JvmField
     val TODOS: Property<MutableList<String>> = newListProperty("todos")
 
     @JvmField

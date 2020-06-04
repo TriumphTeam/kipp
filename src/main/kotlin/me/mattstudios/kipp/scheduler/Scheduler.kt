@@ -1,12 +1,7 @@
 package me.mattstudios.kipp.scheduler
 
-import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.settings.Config
-import me.mattstudios.kipp.settings.Setting
-import me.mattstudios.kipp.utils.Embed
-import me.mattstudios.kipp.utils.MessageUtils.queueMessage
-import me.mattstudios.kipp.utils.Utils
 import net.dv8tion.jda.api.JDA
 import java.util.Date
 import java.util.Timer
@@ -18,10 +13,9 @@ import java.util.concurrent.TimeUnit
  */
 class Scheduler(jda: JDA, config: Config, cache: Cache) {
 
-    private val regex = Regex("\\[([^]]*)] (.*)")
 
     init {
-        for (reminder in config[Setting.REMINDERS]) {
+        /*for (reminder in config[Setting.REMINDERS]) {
             val (dateUser, task) = regex.matchEntire(reminder)?.destructured ?: continue
 
             val (dateArg, userId) = dateUser.split("|")
@@ -50,7 +44,7 @@ class Scheduler(jda: JDA, config: Config, cache: Cache) {
                 reminders.remove(reminder)
                 config[Setting.REMINDERS] = reminders
             }
-        }
+        }*/
     }
 
     /**

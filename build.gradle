@@ -22,6 +22,7 @@ allprojects {
         jcenter()
 
         maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+        maven { url = 'https://jitpack.io' }
 
     }
 
@@ -46,7 +47,7 @@ allprojects {
         implementation "me.mattstudios.utils:matt-framework-jda:1.1.9-BETA"
 
         // Config
-        implementation "ch.jalu:configme:1.1.0"
+        implementation "com.github.AuthMe:ConfigMe:7bdf40d0f4"
 
         // Google's shit
         implementation "com.google.cloud:google-cloud-dialogflow:2.0.0"
