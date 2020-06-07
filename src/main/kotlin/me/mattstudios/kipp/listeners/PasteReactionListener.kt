@@ -3,6 +3,7 @@ package me.mattstudios.kipp.listeners
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
+import me.mattstudios.kipp.utils.Utils.append
 import me.mattstudios.kipp.utils.Utils.createPaste
 import me.mattstudios.kipp.utils.Utils.extractLinks
 import me.mattstudios.kipp.utils.Utils.plural
@@ -10,12 +11,11 @@ import me.mattstudios.kipp.utils.Utils.readContent
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import java.net.URL
 
 /**
  * @author Matt
  */
-class PasteConversionListener(private val jda: JDA) : ListenerAdapter() {
+class PasteReactionListener(private val jda: JDA) : ListenerAdapter() {
 
     /**
      * Listens for the message reaction add event to check for the no paste bin emote
@@ -41,17 +41,15 @@ class PasteConversionListener(private val jda: JDA) : ListenerAdapter() {
         for (link in links) {
             if ("pastebin.com" !in link.host) continue
 
-            val url = URL(link, "/raw${link.path}")
+            val url = link.append("/raw")
             newPastes.add(createPaste(url.readContent()))
         }
 
-        val pasteSize = newPastes.size
-
-        if (pasteSize == 0) return
+        if (newPastes.isEmpty()) return
 
         val embed = Embed()
                 .color(Color.SUCCESS)
-                .field("Paste".plural(pasteSize) + " converted!", newPastes.joinToString("\n"))
+                .field("Paste".plural(newPastes.size) + " converted!", newPastes.joinToString("\n"))
 
         message.textChannel.queueMessage(embed.build())
     }

@@ -21,9 +21,9 @@ class Status(private val startTime: Long) : CommandBase() {
 
         val uptime = (System.currentTimeMillis() - startTime).formatTime()
         val embed = Embed(message.author).author("Kipp v1.0", kipp.avatarUrl ?: kipp.defaultAvatarUrl)
+                .field("Status:", "<:online:718229424948117536> Operational", true)
                 .field("Uptime:", uptime, true)
                 .field("Creator:", "Matt#7079", true)
-                .field("Status:", "<:online:718229424948117536> Operational", true)
 
         message.textChannel.queueMessage(embed.build())
     }

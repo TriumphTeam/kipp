@@ -7,7 +7,6 @@ import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
-import me.mattstudios.kipp.utils.Utils.readContent
 import net.dv8tion.jda.api.entities.Message
 import java.net.URL
 
@@ -22,7 +21,7 @@ class PasteScanner(
     /**
      * Handles the leak search for the paste
      */
-    fun searchForLeaks(paste: URL, message: Message, originalLink: URL): Boolean {
+    fun searchForLeaks(pasteContent: String, message: Message, originalLink: URL): Boolean {
         val channel = cache.leakChannel
 
         if (channel == null) {
@@ -32,7 +31,6 @@ class PasteScanner(
 
         val leakWords = config[Setting.LEAK_WORDS]
 
-        val pasteContent = paste.readContent()
         val lines = pasteContent.split("\n")
 
         val index = lines.findLeak(leakWords)

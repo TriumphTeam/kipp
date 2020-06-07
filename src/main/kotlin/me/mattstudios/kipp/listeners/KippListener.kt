@@ -67,7 +67,9 @@ class KippListener(
 
             when (response[0]) {
                 "reminder" -> handleReminder(response.drop(1), user, channel)
+                else -> channel.queueMessage(response.joinToString(" "))
             }
+
         }
 
     }

@@ -20,7 +20,7 @@ import me.mattstudios.kipp.listeners.JoinListener
 import me.mattstudios.kipp.listeners.KippListener
 import me.mattstudios.kipp.listeners.MessageLogListener
 import me.mattstudios.kipp.listeners.MessagePasteListener
-import me.mattstudios.kipp.listeners.PasteConversionListener
+import me.mattstudios.kipp.listeners.PasteReactionListener
 import me.mattstudios.kipp.listeners.SettingsListener
 import me.mattstudios.kipp.listeners.StatusListener
 import me.mattstudios.kipp.listeners.SuggestionsBugsListener
@@ -181,7 +181,7 @@ class Kipp {
     private fun registerListeners() {
         val listeners = listOf(
                 JoinListener(cache, database),
-                PasteConversionListener(jda),
+                PasteReactionListener(jda),
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
                 KippListener(cache, config, database, scheduler),
