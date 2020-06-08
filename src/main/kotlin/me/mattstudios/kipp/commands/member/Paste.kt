@@ -4,6 +4,7 @@ import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.annotations.Command
 import me.mattstudios.mfjda.annotations.Default
+import me.mattstudios.mfjda.annotations.Delete
 import me.mattstudios.mfjda.annotations.Prefix
 import me.mattstudios.mfjda.base.CommandBase
 
@@ -15,8 +16,9 @@ import me.mattstudios.mfjda.base.CommandBase
 class Paste : CommandBase() {
 
     @Default
+    @Delete
     fun paste() {
-        val embed = Embed(message.author).field("HelpChat's paste", "Please use [**this paste**](https://paste.helpch.at/) instead.")
+        val embed = Embed(message.author).field("HelpChat's paste", "Please use [**this paste**](https://paste.helpch.at/).")
         message.textChannel.queueMessage(embed.build())
     }
 

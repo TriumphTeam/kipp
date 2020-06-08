@@ -21,6 +21,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
     var reminderChannel: TextChannel? = null
     var suggestionsChannel: TextChannel? = null
     var bugsChannel: TextChannel? = null
+    var botCmdsChannel: TextChannel? = null
 
     var memberRole: Role? = null
     var pluginsRole: Role? = null
@@ -36,6 +37,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
     var mattEmote: Emote? = null
     var mfEmote: Emote? = null
     var ccmdEmote: Emote? = null
+    var clipboardEmote: Emote? = null
 
     var invites = mutableListOf<Invite>()
 
@@ -44,12 +46,14 @@ class Cache(private val config: Config) : ListenerAdapter() {
      */
     override fun onGuildReady(event: GuildReadyEvent) {
         val guild = event.guild
+
         joinChannel = guild.getTextChannelById(config[Setting.JOIN_LOG_CHANNEL])
         leakChannel = guild.getTextChannelById(config[Setting.LEAK_LOG_CHANNEL])
         messageChannel = guild.getTextChannelById(config[Setting.MESSAGE_LOG_CHANNEL])
         reminderChannel = guild.getTextChannelById(config[Setting.REMINDER_CHANNEL])
         suggestionsChannel = guild.getTextChannelById(config[Setting.SUGGESTIONS_CHANNEL])
         bugsChannel = guild.getTextChannelById(config[Setting.BUGS_CHANNEL])
+        botCmdsChannel = guild.getTextChannelById(config[Setting.BOT_CMDS_CHANNEL])
 
         invites = guild.retrieveInvites().complete()
 
@@ -67,6 +71,7 @@ class Cache(private val config: Config) : ListenerAdapter() {
         mattEmote = guild.getEmotesByName("matt", true).firstOrNull()
         mfEmote = guild.getEmotesByName("mf", true).firstOrNull()
         ccmdEmote = guild.getEmotesByName("ccmd", true).firstOrNull()
+        clipboardEmote = guild.getEmotesByName("paste", true).firstOrNull()
     }
 
     /**

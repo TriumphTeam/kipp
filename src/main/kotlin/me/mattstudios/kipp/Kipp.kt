@@ -160,7 +160,10 @@ class Kipp {
      */
     private fun registerParameters() {
         commandManager.registerParameter(Int::class.java) { argument, _ -> TypeResult(argument.toString().toIntOrNull(), argument) }
-        commandManager.registerParameter(Role::class.java) { argument, _ -> TypeResult(jda.getRoleById(argument.toString()), argument) }
+        commandManager.registerParameter(Role::class.java) { argument, guild ->
+            if (argument == null) TypeResult(argument)
+            else TypeResult(guild.getRoleById(argument.toString().replace(("[^\\d]").toRegex(), "")), argument)
+        }
 
         commandManager.registerParameter(TextChannel::class.java) { argument, guild ->
             if (argument == null) TypeResult(argument)
@@ -181,12 +184,12 @@ class Kipp {
     private fun registerListeners() {
         val listeners = listOf(
                 JoinListener(cache, database),
-                PasteReactionListener(jda),
+                PasteReactionListener(jda, cache),
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
                 KippListener(cache, config, database, scheduler),
                 SuggestionsBugsListener(cache),
-                SettingsListener(config, cache)
+                SettingsListener(config, cache, scheduler)
         )
 
         logger.info("Registering ${listeners.size} listeners..")

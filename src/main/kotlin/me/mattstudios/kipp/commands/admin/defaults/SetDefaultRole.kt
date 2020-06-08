@@ -8,6 +8,7 @@ import me.mattstudios.mfjda.annotations.Default
 import me.mattstudios.mfjda.annotations.Prefix
 import me.mattstudios.mfjda.annotations.Requirement
 import me.mattstudios.mfjda.base.CommandBase
+import net.dv8tion.jda.api.entities.Role
 
 /**
  * @author Matt
@@ -18,23 +19,23 @@ class SetDefaultRole(private val config: Config, private val cache: Cache) : Com
 
     @Default
     @Requirement("#admin-up")
-    fun setDefaultRoles(role: String, roleId: String) {
+    fun setDefaultRoles(roleName: String, role: Role) {
         val guild = message.guild
 
-        when (role.toLowerCase()) {
+        when (roleName.toLowerCase()) {
             "member" -> {
-                config[Setting.MEMBER_ROLE] = roleId
-                cache.memberRole = guild.getRoleById(roleId)
+                config[Setting.MEMBER_ROLE] = role.id
+                cache.memberRole = role
             }
 
             "plugins" -> {
-                config[Setting.PLUGINS_ROLE] = roleId
-                cache.pluginsRole = guild.getRoleById(roleId)
+                config[Setting.PLUGINS_ROLE] = role.id
+                cache.pluginsRole = role
             }
 
             "subscriptions" -> {
-                config[Setting.SUBSCRIPTIONS_ROLE] = roleId
-                cache.subscriptionsRole = guild.getRoleById(roleId)
+                config[Setting.SUBSCRIPTIONS_ROLE] = role.id
+                cache.subscriptionsRole = role
             }
         }
     }

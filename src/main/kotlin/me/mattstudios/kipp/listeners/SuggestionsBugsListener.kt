@@ -64,7 +64,6 @@ class SuggestionsBugsListener(private val cache: Cache) : ListenerAdapter() {
      * Checks if the message pattern is correct
      */
     private fun String.isPattern(channel: String): Boolean {
-        if (!this.startsWith("```ini\n", true) || !this.endsWith("```")) return false
         val message = this.split("\n").drop(1)
         if (message.size <= 1) return false
 

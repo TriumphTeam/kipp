@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Member
 import java.awt.Color
 import java.io.BufferedReader
 import java.io.DataOutputStream
+import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
@@ -43,6 +44,8 @@ object Utils {
      * Reads the content of an input stream and turns it into a string
      */
     fun URL.readContent(charset: Charset = Charsets.UTF_8) = openStream().bufferedReader(charset).use { it.readText() }
+
+    fun File.readContent(charset: Charset = Charsets.UTF_8) = inputStream().bufferedReader(charset).use { it.readText() }
 
     /**
      * Checks if the link is a paste or not

@@ -24,6 +24,8 @@ object Setting : SettingsHolder {
 
     val BUGS_CHANNEL: Property<String> = newProperty("channel.bugs", "0")
 
+    val BOT_CMDS_CHANNEL: Property<String> = newProperty("channel.bot-cmds", "0")
+
     val MEMBER_ROLE: Property<String> = newProperty("role.member", "0")
 
     val PLUGINS_ROLE: Property<String> = newProperty("role.plugins", "0")

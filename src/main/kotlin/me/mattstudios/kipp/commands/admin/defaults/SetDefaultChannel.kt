@@ -63,6 +63,12 @@ class SetDefaultChannel(
                 cache.bugsChannel = channel
                 message.textChannel.queueMessage("Bugs channel set successfully!")
             }
+
+            "botcmds" -> {
+                config[Setting.BOT_CMDS_CHANNEL] = channel.id
+                cache.botCmdsChannel = channel
+                message.textChannel.queueMessage("Bot commands channel set successfully!")
+            }
         }
 
     }

@@ -59,10 +59,8 @@ class Scheduler(jda: JDA, config: Config, cache: Cache) {
     /**
      * Schedules a repeating task at a specific date that will run every "period" in a time unit
      */
-    fun scheduleRepeatingTask(date: Date, period: Int, timeUnit: TimeUnit = TimeUnit.DAYS, task: () -> Unit) {
-        val kippTask = KippTask(task)
-        val timer = Timer()
-        timer.schedule(kippTask, date, TimeUnit.MILLISECONDS.convert(period.toLong(), timeUnit))
+    fun scheduleRepeatingTask(delay: Long, period: Long, timeUnit: TimeUnit = TimeUnit.DAYS, task: () -> Unit) {
+        Timer().schedule(KippTask(task), timeUnit.toMillis(period), timeUnit.toMillis(delay))
     }
 
 }
