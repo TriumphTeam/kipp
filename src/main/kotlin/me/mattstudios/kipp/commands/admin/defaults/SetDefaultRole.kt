@@ -20,7 +20,6 @@ class SetDefaultRole(private val config: Config, private val cache: Cache) : Com
     @Default
     @Requirement("#admin-up")
     fun setDefaultRoles(roleName: String, role: Role) {
-        val guild = message.guild
 
         when (roleName.toLowerCase()) {
             "member" -> {

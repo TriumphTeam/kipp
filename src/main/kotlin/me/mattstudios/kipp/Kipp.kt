@@ -1,5 +1,7 @@
 package me.mattstudios.kipp
 
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import me.mattstudios.kipp.commands.admin.Message
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.Status
@@ -29,12 +31,14 @@ import me.mattstudios.kipp.manager.TodoManager
 import me.mattstudios.kipp.scheduler.Scheduler
 import me.mattstudios.kipp.settings.Config
 import me.mattstudios.kipp.settings.Setting
+import me.mattstudios.kipp.utils.Embed
 import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import me.mattstudios.mfjda.base.CommandManager
 import me.mattstudios.mfjda.base.components.TypeResult
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.VoiceChannel
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.apache.commons.validator.routines.UrlValidator
@@ -72,12 +76,12 @@ class Kipp {
                             GatewayIntent.GUILD_MESSAGE_TYPING,
                             GatewayIntent.GUILD_MEMBERS,
                             GatewayIntent.GUILD_INVITES,
-                            GatewayIntent.GUILD_PRESENCES
+                            GatewayIntent.GUILD_PRESENCES,
+                            GatewayIntent.GUILD_VOICE_STATES
                     ))
             .disableCache(
                     listOf(
-                            CacheFlag.ACTIVITY,
-                            CacheFlag.VOICE_STATE
+                            CacheFlag.ACTIVITY
                     )
             )
             .addEventListeners(cache, StatusListener())
@@ -90,12 +94,17 @@ class Kipp {
     private val todoManager = TodoManager(database)
     private val scheduler = Scheduler(jda, config, cache)
 
+    val playerManager = DefaultAudioPlayerManager()
+
     private val startTime = System.currentTimeMillis()
 
     /**
      * Calls all the registers
      */
     init {
+        AudioSourceManagers.registerRemoteSources(playerManager)
+        AudioSourceManagers.registerLocalSource(playerManager)
+
         registerListeners()
         registerParameters()
         registerRequirements()
@@ -121,8 +130,8 @@ class Kipp {
     private fun registerMessages() {
         commandManager.registerMessage("cmd.no.permission") {}
         // TODO this ones
-        commandManager.registerMessage("cmd.no.exists") { message -> message.textChannel.queueMessage("Command doesn't exist") }
-        commandManager.registerMessage("cmd.wrong.usage") { message -> message.textChannel.queueMessage("Wrong usage") }
+        commandManager.registerMessage("cmd.no.exists") { message -> message.textChannel.queueMessage(Embed().field("Error!", "That command does not exist!").build()) }
+        commandManager.registerMessage("cmd.wrong.usage") { message -> message.textChannel.queueMessage(Embed().field("Error!", "Wrong usage for that command!").build()) }
     }
 
     /**
@@ -133,6 +142,7 @@ class Kipp {
                 Purge(),
                 Message(),
                 Status(startTime),
+                //Connect(this),
 
                 Faq(faqManager, database),
                 Todo(todoManager),
@@ -170,6 +180,11 @@ class Kipp {
             else TypeResult(guild.getTextChannelById(argument.toString().replace(("[^\\d]").toRegex(), "")), argument)
         }
 
+        commandManager.registerParameter(VoiceChannel::class.java) { argument, guild ->
+            if (argument == null) TypeResult(argument)
+            else TypeResult(guild.getVoiceChannelById(argument.toString().replace(("[^\\d]").toRegex(), "")), argument)
+        }
+
         commandManager.registerParameter(URL::class.java) { argument, _ ->
             if (argument == null) TypeResult(argument)
             else if (!UrlValidator.getInstance().isValid(argument.toString())) TypeResult(argument)
@@ -187,7 +202,7 @@ class Kipp {
                 PasteReactionListener(jda, cache),
                 MessagePasteListener(config, cache),
                 MessageLogListener(config, cache, database),
-                KippListener(cache, config, database, scheduler),
+                KippListener(cache, config, database, scheduler, playerManager),
                 SuggestionsBugsListener(cache),
                 SettingsListener(config, cache, scheduler)
         )

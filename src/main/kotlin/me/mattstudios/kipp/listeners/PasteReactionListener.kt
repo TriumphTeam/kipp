@@ -1,5 +1,6 @@
 package me.mattstudios.kipp.listeners
 
+import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.data.Cache
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
@@ -32,6 +33,8 @@ class PasteReactionListener(private val jda: JDA, private val cache: Cache) : Li
 
         val pasteEmote = cache.clipboardEmote ?: return
         if (emote.emote != pasteEmote) return
+
+        Kipp.logger.info("Converting paste!")
 
         val adminRole = jda.getRoleById(496353695605456897) ?: return
         if (member.roles.none { role -> role.position >= adminRole.position }) return

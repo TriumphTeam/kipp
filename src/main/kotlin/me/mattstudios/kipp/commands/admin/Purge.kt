@@ -24,11 +24,12 @@ class Purge : CommandBase() {
 
         message.channel.purgeMessages(message.channel.history.retrievePast(amount + 1).complete())
 
-        val builder = Embed(message.author)
-                .color(Color.SUCCESS)
-                .field("Purge successful!", "• Removed $amount messages.", false)
-        
-        message.textChannel.queueMessage(builder.build())
+        message.textChannel.queueMessage(
+                Embed(message.author)
+                        .color(Color.SUCCESS)
+                        .field("Purge successful!", "• Removed $amount messages.", false)
+                        .build()
+        )
     }
 
 }

@@ -10,7 +10,6 @@ import me.mattstudios.kipp.utils.MessageUtils.queueMessage
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
-import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.TimeUnit
@@ -21,13 +20,11 @@ import java.util.concurrent.TimeUnit
 class SettingsListener(
         private val config: Config,
         private val cache: Cache,
-        private val scheduler: Scheduler
+        scheduler: Scheduler
 ) : ListenerAdapter() {
 
     private val added = mutableMapOf<String, Long>()
     private val removed = mutableMapOf<String, Long>()
-
-    private var botChannel: TextChannel? = null
 
     init {
         scheduler.scheduleRepeatingTask(1, 1, TimeUnit.MINUTES) {
@@ -54,8 +51,6 @@ class SettingsListener(
         if (user.isBot) return
 
         event.reaction.removeReaction(event.user).queue()
-
-        botChannel = event.channel
 
         when (event.reactionEmote.emote) {
             // When reacting with CitizensCMD emote
@@ -87,13 +82,14 @@ class SettingsListener(
      */
     private fun Guild.addOrRemoveMemberRole(member: Member, role: Role, ping: String) {
         val memberRoles = member.roles
+        val botChannel = cache.botCmdsChannel ?: return
 
         if (role in memberRoles && serialize(member, role) !in removed) {
             removeRoleFromMember(member, role).queue()
             removed[serialize(member, role)] = System.currentTimeMillis()
 
-            botChannel?.queueMessage(member.asMention)
-            botChannel?.queueMessage(Embed().color(Color.FAIL).field("Subscription", "You are no longer subscribing to `$ping`!").build())
+            botChannel.queueMessage(member.asMention)
+            botChannel.queueMessage(Embed().color(Color.FAIL).field("Subscription", "You are no longer subscribing to `$ping`!").build())
             return
         }
 
@@ -101,8 +97,8 @@ class SettingsListener(
         addRoleToMember(member, role).queue()
         added[serialize(member, role)] = System.currentTimeMillis()
 
-        botChannel?.queueMessage(member.asMention)
-        botChannel?.queueMessage(Embed().color(Color.SUCCESS).field("Subscription", "You are now subscribing to `$ping`!").build())
+        botChannel.queueMessage(member.asMention)
+        botChannel.queueMessage(Embed().color(Color.SUCCESS).field("Subscription", "You are now subscribing to `$ping`!").build())
     }
 
     /**
