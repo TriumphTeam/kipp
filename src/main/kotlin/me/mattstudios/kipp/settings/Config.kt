@@ -1,8 +1,7 @@
 package me.mattstudios.kipp.settings
 
-import ch.jalu.configme.SettingsManagerBuilder
-import ch.jalu.configme.properties.Property
-import ch.jalu.configme.resource.YamlFileResourceOptions
+import me.mattstudios.config.SettingsManager
+import me.mattstudios.config.properties.Property
 import java.io.File
 
 /**
@@ -10,29 +9,23 @@ import java.io.File
  */
 class Config {
 
-    private val settingsManager = SettingsManagerBuilder
-            .withYamlFile(
-                    File("config", "config.yml"),
-                    YamlFileResourceOptions.builder()
-                            .indentationSize(2)
-                            .build()
-            )
-            .configurationData(Setting.javaClass)
-            .useDefaultMigrationService()
-            .create()
+    private val settingsManager = SettingsManager
+        .from(File("config", "config.yml"))
+        .configurationData(Setting.javaClass)
+        .create()
 
     /**
      * Gets the config property
      */
     operator fun <T> get(property: Property<T>): T {
-        return settingsManager.getProperty(property)
+        return settingsManager[property]
     }
 
     /**
      * Sets the config property
      */
-    operator fun <T> set(property: Property<T>, value: T) {
-        settingsManager.setProperty(property, value)
+    operator fun <T: Any> set(property: Property<T>, value: T) {
+        settingsManager.set(property, value)
         settingsManager.save()
     }
 

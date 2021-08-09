@@ -2,6 +2,7 @@ package me.mattstudios.kipp
 
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import me.mattstudios.kipp.commands.Test
 import me.mattstudios.kipp.commands.admin.Message
 import me.mattstudios.kipp.commands.admin.Purge
 import me.mattstudios.kipp.commands.admin.Status
@@ -94,8 +95,6 @@ class Kipp {
     private val todoManager = TodoManager(database)
     private val scheduler = Scheduler(jda, config, cache)
 
-    val playerManager = DefaultAudioPlayerManager()
-
     private val startTime = System.currentTimeMillis()
 
     /**
@@ -157,7 +156,9 @@ class Kipp {
 
                 SetDefaultChannel(config, cache),
                 SetDefaultRole(config, cache),
-                SetSettings(config, cache)
+                SetSettings(config, cache),
+
+                Test()
         )
 
         logger.info("Registering ${commands.size} commands..")

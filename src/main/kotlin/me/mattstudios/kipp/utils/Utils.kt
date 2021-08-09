@@ -87,13 +87,17 @@ object Utils {
      */
     fun createPaste(text: String): String {
         val future = CompletableFuture.supplyAsync {
+            // Turns the post data into byte array
             val postData = text.toByteArray(StandardCharsets.UTF_8)
             val postDataLength = postData.size
 
+            // The request URL
             val requestURL = "https://paste.helpch.at/documents"
 
+            // Opens the connection
             val connection = URL(requestURL).openConnection() as HttpsURLConnection
 
+            // Sets up the POST properties
             connection.doOutput = true
             connection.instanceFollowRedirects = false
             connection.requestMethod = "POST"
@@ -104,17 +108,18 @@ object Utils {
             var response = ""
             val dataOutputStream: DataOutputStream
             try {
+                // Writes the paste
                 dataOutputStream = DataOutputStream(connection.outputStream)
                 dataOutputStream.write(postData)
+
+                // Reads the response
                 val reader = BufferedReader(InputStreamReader(connection.inputStream))
                 response = reader.readLine()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
 
-
             if (!response.contains("\"key\"")) return@supplyAsync ""
-
 
             return@supplyAsync response.substring(response.indexOf(":") + 2, response.length - 2)
         }

@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import me.mattstudios.kipp.Kipp
 import me.mattstudios.kipp.json.JsonEmbed
 import me.mattstudios.kipp.settings.Config
-import me.mattstudios.kipp.settings.Setting
 import me.mattstudios.kipp.settings.Setting.BLACK_LISTED_CHANNELS
 import me.mattstudios.kipp.utils.Color
 import me.mattstudios.kipp.utils.Embed
@@ -38,9 +37,8 @@ class Database(private val config: Config) {
     init {
         val hikariConfig = HikariConfig()
 
-        hikariConfig.jdbcUrl = "jdbc:mysql://${config[Setting.SQL_HOST]}:3306/${config[Setting.SQL_DATABASE]}"
-        hikariConfig.username = config[Setting.SQL_USER]
-        hikariConfig.password = config[Setting.SQL_PASSWORD]
+        hikariConfig.jdbcUrl = "jdbc:sqlite:database.db"
+        hikariConfig.driverClassName = "org.sqlite.JDBC"
 
         hikariConfig.addDataSourceProperty("cachePrepStmts", true)
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", 250)
@@ -54,11 +52,11 @@ class Database(private val config: Config) {
         hikariConfig.addDataSourceProperty("maintainTimeStats", false)
         hikariConfig.addDataSourceProperty("characterEncoding", "utf8")
         hikariConfig.addDataSourceProperty("useUnicode", "true")
-        hikariConfig.connectionInitSql = "SET NAMES 'utf8mb4'"
+        //hikariConfig.connectionInitSql = "SET NAMES 'utf8mb4'"
 
         dataSource = HikariDataSource(hikariConfig)
 
-        if (dataSource.isRunning) Kipp.logger.info("Connected to \"${config[Setting.SQL_DATABASE]}\" successfully")
+        if (dataSource.isRunning) Kipp.logger.info("Connected to database successfully")
     }
 
     /**
@@ -69,7 +67,8 @@ class Database(private val config: Config) {
             measureTimeMillis {
                 dataSource.connection.use { connection ->
                     guild.members.forEach { member ->
-                        val preparedStatement = connection.prepareStatement("insert ignore into members values (?, ?, ?)")
+                        val preparedStatement =
+                            connection.prepareStatement("insert ignore into members values (?, ?, ?)")
 
                         preparedStatement.setLong(1, member.idLong)
                         preparedStatement.setString(2, "unknown")
@@ -82,13 +81,13 @@ class Database(private val config: Config) {
         }
 
         channel.queueMessage(
-                Embed()
-                        .color(Color.SUCCESS)
-                        .field(
-                                "Updating database",
-                                "Successfully updated!" +
-                                "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(time)}s"
-                        ).build()
+            Embed()
+                .color(Color.SUCCESS)
+                .field(
+                    "Updating database",
+                    "Successfully updated!" +
+                            "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(time)}s"
+                ).build()
         )
     }
 
@@ -100,34 +99,35 @@ class Database(private val config: Config) {
             measureTimeMillis {
                 val connection = dataSource.connection
                 guild.textChannels.filter { it.id !in config[BLACK_LISTED_CHANNELS] }
-                        .forEach { channel ->
-                            channel.history.retrievePast(100).complete()
-                                    .filter { !it.author.isBot }
-                                    .forEach { message ->
-                                        try {
-                                            val statement = connection.prepareStatement("replace into messages(message_id, message, author) values(?, ?, ?)")
-                                            statement.setLong(1, message.idLong)
-                                            statement.setString(2, message.contentDisplay)
-                                            statement.setLong(3, message.author.idLong)
+                    .forEach { channel ->
+                        channel.history.retrievePast(100).complete()
+                            .filter { !it.author.isBot }
+                            .forEach { message ->
+                                try {
+                                    val statement =
+                                        connection.prepareStatement("replace into messages(message_id, message, author) values(?, ?, ?)")
+                                    statement.setLong(1, message.idLong)
+                                    statement.setString(2, message.contentDisplay)
+                                    statement.setLong(3, message.author.idLong)
 
-                                            statement.executeUpdate()
-                                        } catch (exception: SQLException) {
-                                            Kipp.logger.warn("Error inserting message to database!")
-                                        }
-                                    }
-                        }
+                                    statement.executeUpdate()
+                                } catch (exception: SQLException) {
+                                    Kipp.logger.warn("Error inserting message to database!")
+                                }
+                            }
+                    }
             }
 
         }
 
         messageChannel.queueMessage(
-                Embed()
-                        .color(Color.SUCCESS)
-                        .field(
-                                "Updating database messages",
-                                "Successfully updated all messages!" +
-                                "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(time)}s"
-                        ).build()
+            Embed()
+                .color(Color.SUCCESS)
+                .field(
+                    "Updating database messages",
+                    "Successfully updated all messages!" +
+                            "\nComplete in ${TimeUnit.MILLISECONDS.toSeconds(time)}s"
+                ).build()
         )
 
     }
@@ -155,7 +155,8 @@ class Database(private val config: Config) {
     suspend fun insertMessage(message: Message) {
         withContext(IO) {
             dataSource.connection.use { connection ->
-                val preparedStatement = connection.prepareStatement("replace into messages(message_id, message, author) values (?, ?, ?)")
+                val preparedStatement =
+                    connection.prepareStatement("replace into messages(message_id, message, author) values (?, ?, ?)")
 
                 preparedStatement.setLong(1, message.idLong)
                 preparedStatement.setString(2, message.contentDisplay)
@@ -171,7 +172,8 @@ class Database(private val config: Config) {
      */
     suspend fun insertFaq(command: String, jsonEmbed: JsonEmbed, author: User) {
         dataSource.connection.use { connection ->
-            val preparedStatement = connection.prepareStatement("replace into faqs(command, embed, creator_id) values (?, ?, ?)")
+            val preparedStatement =
+                connection.prepareStatement("replace into faqs(command, embed, creator_id) values (?, ?, ?)")
 
             preparedStatement.setString(1, command)
             preparedStatement.setString(2, gson.toJson(jsonEmbed))
@@ -200,7 +202,8 @@ class Database(private val config: Config) {
      */
     fun insertReminder(date: Date, userId: Long, reminder: String) {
         dataSource.connection.use { connection ->
-            val preparedStatement = connection.prepareStatement("insert into reminders(date, reminder, user) values (?, ?, ?)")
+            val preparedStatement =
+                connection.prepareStatement("insert into reminders(date, reminder, user) values (?, ?, ?)")
 
             preparedStatement.setObject(1, date.toInstant().atZone(ZoneId.of("Europe/Lisbon")).toLocalDateTime())
             preparedStatement.setString(2, reminder)
@@ -215,7 +218,8 @@ class Database(private val config: Config) {
      */
     fun getInvite(memberId: Long): KippInvite? {
         return dataSource.connection.use { connection ->
-            val preparedStatement = connection.prepareStatement("select invite, invited_by from members where member_id = ?")
+            val preparedStatement =
+                connection.prepareStatement("select invite, invited_by from members where member_id = ?")
             preparedStatement.setLong(1, memberId)
 
             val resultSet = preparedStatement.executeQuery()

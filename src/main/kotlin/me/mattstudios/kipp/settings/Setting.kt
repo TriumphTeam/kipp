@@ -1,62 +1,84 @@
 package me.mattstudios.kipp.settings
 
-import ch.jalu.configme.Comment
-import ch.jalu.configme.SettingsHolder
-import ch.jalu.configme.configurationdata.CommentsConfiguration
-import ch.jalu.configme.properties.Property
-import ch.jalu.configme.properties.PropertyInitializer.newListProperty
-import ch.jalu.configme.properties.PropertyInitializer.newProperty
+import me.mattstudios.config.SettingsHolder
+import me.mattstudios.config.annotations.Comment
+import me.mattstudios.config.annotations.Path
+import me.mattstudios.config.configurationdata.CommentsConfiguration
+import me.mattstudios.config.properties.Property
 
 object Setting : SettingsHolder {
 
+    @Path("token")
     @Comment("The token that is needed to login into the bot")
-    val TOKEN: Property<String> = newProperty("token", "none")
+    val TOKEN = Property.create("none")
 
-    val JOIN_LOG_CHANNEL: Property<String> = newProperty("channel.join-log", "0")
+    @Path("channel.join-log")
+    val JOIN_LOG_CHANNEL = Property.create("0")
 
-    val LEAK_LOG_CHANNEL: Property<String> = newProperty("channel.leak-log", "0")
+    @Path("channel.leak-log")
+    val LEAK_LOG_CHANNEL = Property.create("0")
 
-    val MESSAGE_LOG_CHANNEL: Property<String> = newProperty("channel.message-log", "0")
+    @Path("channel.message-log")
+    val MESSAGE_LOG_CHANNEL = Property.create("0")
 
-    val REMINDER_CHANNEL: Property<String> = newProperty("channel.reminder", "0")
+    @Path("channel.reminder")
+    val REMINDER_CHANNEL = Property.create("0")
 
-    val SUGGESTIONS_CHANNEL: Property<String> = newProperty("channel.suggestions", "0")
+    @Path("channel.suggestions")
+    val SUGGESTIONS_CHANNEL = Property.create("0")
 
-    val BUGS_CHANNEL: Property<String> = newProperty("channel.bugs", "0")
+    @Path("channel.bugs")
+    val BUGS_CHANNEL = Property.create("0")
 
-    val BOT_CMDS_CHANNEL: Property<String> = newProperty("channel.bot-cmds", "0")
+    @Path("channel.bot-cmds")
+    val BOT_CMDS_CHANNEL = Property.create("0")
 
-    val MEMBER_ROLE: Property<String> = newProperty("role.member", "0")
+    @Path("role.member")
+    val MEMBER_ROLE = Property.create("0")
 
-    val PLUGINS_ROLE: Property<String> = newProperty("role.plugins", "0")
+    @Path("role.plugins")
+    val PLUGINS_ROLE = Property.create("0")
 
-    val SUBSCRIPTIONS_ROLE: Property<String> = newProperty("role.subscriptions", "0713927697679777802")
+    @Path("role.subscriptions")
+    val SUBSCRIPTIONS_ROLE = Property.create("0713927697679777802")
 
-    val ADMIN_ROLE: Property<String> = newProperty("role.admin", "496353695605456897")
+    @Path("role.admin")
+    val ADMIN_ROLE = Property.create("496353695605456897")
 
-    val CCMD_ROLE: Property<String> = newProperty("role.ccmd", "713929371290959904")
+    @Path("role.ccmd")
+    val CCMD_ROLE = Property.create("713929371290959904")
 
-    val MF_ROLE: Property<String> = newProperty("role.mf", "713929424269082684")
+    @Path("role.mf")
+    val MF_ROLE = Property.create("713929424269082684")
 
-    val MATT_ROLE: Property<String> = newProperty("role.matt", "713929561603047466")
+    @Path("role.matt")
+    val MATT_ROLE = Property.create("713929561603047466")
 
-    val SETTINGS_MESSAGE: Property<String> = newProperty("message.settings", "0")
+    @Path("message.settings")
+    val SETTINGS_MESSAGE = Property.create("0")
 
-    val SQL_HOST: Property<String> = newProperty("database.host", "localhost")
+    @Path("database.host")
+    val SQL_HOST = Property.create("localhost")
 
-    val SQL_USER: Property<String> = newProperty("database.user", "matt")
+    @Path("database.user")
+    val SQL_USER = Property.create("matt")
 
-    val SQL_PASSWORD: Property<String> = newProperty("database.password", "bleh")
+    @Path("database.password")
+    val SQL_PASSWORD = Property.create("bleh")
 
-    val SQL_DATABASE: Property<String> = newProperty("database.database", "matt")
+    @Path("database.database")
+    val SQL_DATABASE = Property.create("matt")
 
-    val DIALOGFLOW_PROJECT: Property<String> = newProperty("dialogflow.project-id", "")
+    @Path("dialogflow.project-id")
+    val DIALOGFLOW_PROJECT = Property.create("")
 
+    @Path("leak-words")
     @Comment("\n", "List with all the leak detection words")
-    val LEAK_WORDS: Property<MutableList<String>> = newListProperty("leak-words")
+    val LEAK_WORDS: Property<MutableList<String>> = Property.create(listOf(""))
 
+    @Path("black-listed-channels")
     @Comment("\n", "List with the ids of channels that should be excluded from the message logging")
-    val BLACK_LISTED_CHANNELS: Property<MutableList<String>> = newListProperty("black-listed-channels")
+    val BLACK_LISTED_CHANNELS = Property.create(listOf(""))
 
     override fun registerComments(conf: CommentsConfiguration) {
         conf.setComment("channel", "\n", "The default channels for various actions")

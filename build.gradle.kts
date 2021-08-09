@@ -1,15 +1,23 @@
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import dev.triumphteam.helper.CoreFeature
+import dev.triumphteam.helper.CorePlatform
+import dev.triumphteam.helper.core
+import dev.triumphteam.helper.feature
+import dev.triumphteam.helper.implementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.21"
     id("com.github.johnrengelman.shadow") version "5.1.0"
-    //application
+    application
+    id("me.mattstudios.triumph") version "0.2.3"
 }
 
 group = "dev.triumphteam"
 version = "1.0"
 
+// TODO this
 //mainClassName = "me.mattstudios.kipp.MainKt"
 
 /*sourceSets {
@@ -51,8 +59,10 @@ dependencies {
     // My stuff
     implementation("me.mattstudios.utils:matt-framework-jda:1.1.9-BETA")
 
-    // Config
+    // Triumph
     implementation("me.mattstudios:triumph-config:1.0.5-SNAPSHOT")
+    implementation(core(CorePlatform.JDA, "2.0.0"))
+    implementation(feature(CoreFeature.CONFIG, "2.0.0"))
 
     // Google's shit
     implementation("com.google.cloud:google-cloud-dialogflow:2.0.0")
@@ -60,6 +70,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
 
     implementation("commons-validator:commons-validator:1.6")
+    implementation("commons-cli:commons-cli:1.4")
 
     implementation("com.google.api-client:google-api-client:1.30.4")
     implementation("com.google.oauth-client:google-oauth-client-jetty:1.30.6")
