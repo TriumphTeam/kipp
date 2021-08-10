@@ -95,6 +95,8 @@ class Kipp {
     private val todoManager = TodoManager(database)
     private val scheduler = Scheduler(jda, config, cache)
 
+    private val playerManager = DefaultAudioPlayerManager()
+
     private val startTime = System.currentTimeMillis()
 
     /**

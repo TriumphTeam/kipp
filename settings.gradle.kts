@@ -1,1 +1,3 @@
-rootProject.name = "Kipp"
+rootProject.name = "kipp"
+
+include("bot")

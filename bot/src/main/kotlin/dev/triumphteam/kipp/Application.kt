@@ -1,24 +1,17 @@
 package dev.triumphteam.kipp
 
+import dev.triumphteam.bukkit.feature.install
 import dev.triumphteam.jda.JdaApplication
 import dev.triumphteam.jda.jda
+import dev.triumphteam.kipp.config.Config
+import dev.triumphteam.kipp.database.Database
+import dev.triumphteam.kipp.func.tokenFromFlag
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import org.apache.commons.cli.DefaultParser
-import org.apache.commons.cli.Option
-import org.apache.commons.cli.Options
 import java.io.File
 
-
 fun main(args: Array<String>) {
-    val commandLine = DefaultParser().parse(
-        Options().apply {
-            addOption(Option.builder("t").hasArg().argName("token").required().build())
-        },
-        args
-    )
-
-    val token = commandLine.getOptionValue("t")
+    val token = tokenFromFlag(args)
 
     jda(
         module = JdaApplication::module,
@@ -41,5 +34,10 @@ fun main(args: Array<String>) {
 }
 
 fun JdaApplication.module() {
+    install(Config)
+    install(Database)
 
+    listeners {
+        
+    }
 }
