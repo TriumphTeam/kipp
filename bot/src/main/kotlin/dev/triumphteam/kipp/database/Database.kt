@@ -14,12 +14,12 @@ class Database {
         override val key = key<Database>("database")
 
         override fun install(application: JdaApplication, configure: Database.() -> Unit): Database {
-            val databaseFile = File(application.applicationFolder, "kipp.db")
+            val databaseFile = File(application.applicationFolder, "kipp.db").apply {
+                if (!exists()) createNewFile()
+            }
 
             val hikari = HikariDataSource().apply {
-                dataSourceClassName = "org.sqlite.SQLiteDataSource"
-                jdbcUrl = "jdbc:sqlite:${databaseFile.name}"
-                isAutoCommit = false
+                jdbcUrl = "jdbc:sqlite:${databaseFile.absolutePath}"
             }
 
             org.jetbrains.exposed.sql.Database.connect(hikari)
