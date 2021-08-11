@@ -6,18 +6,19 @@ import dev.triumphteam.bukkit.feature.attribute.key
 import dev.triumphteam.bukkit.feature.featureOrNull
 import dev.triumphteam.bukkit.feature.install
 import dev.triumphteam.jda.JdaApplication
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.GenericEvent
 
-class Listeners(private val jda: JDA, val eventManager: EventManager) {
+class Listeners(private val jdaApplication: JdaApplication) {
+
+    val jda = jdaApplication.jda
 
     @Suppress("UNCHECKED_CAST")
     inline fun <reified E : GenericEvent> on(noinline listener: E.() -> Unit) {
-        eventManager.addListener(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
+        jda.addEventListener(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
     }
 
-    fun register(listener: Listeners.() -> Unit) {
-        listener(this)
+    fun register(listener: JdaApplication.() -> Unit) {
+        listener(jdaApplication)
     }
 
     companion object Feature : ApplicationFeature<JdaApplication, Listeners, Listeners> {
@@ -25,14 +26,22 @@ class Listeners(private val jda: JDA, val eventManager: EventManager) {
         override val key = key<Listeners>("listeners")
 
         override fun install(application: JdaApplication, configure: Listeners.() -> Unit): Listeners {
-            val eventManager = EventManager()
-            application.jda.setEventManager(eventManager)
-            return Listeners(application.jda, eventManager)
+            application.jda.setEventManager(EventManager())
+            return Listeners(application)
         }
     }
 }
 
 @TriumphDsl
-fun JdaApplication.listeners(configuration: Listeners.() -> Unit): Listeners =
-    featureOrNull(Listeners)?.apply(configuration) ?: install(Listeners, configuration).apply(configuration)
+fun JdaApplication.listen(listener: JdaApplication.() -> Unit): Listeners {
+    val feature = featureOrNull(Listeners) ?: install(Listeners)
+    feature.register(listener)
+    return feature
+}
+
+@TriumphDsl
+@Suppress("UNCHECKED_CAST")
+inline fun <reified E : GenericEvent> JdaApplication.on(noinline listener: E.() -> Unit) {
+    jda.addEventListener(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
+}
 

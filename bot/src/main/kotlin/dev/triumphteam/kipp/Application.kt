@@ -5,10 +5,9 @@ import dev.triumphteam.jda.JdaApplication
 import dev.triumphteam.jda.jda
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.database.Database
-import dev.triumphteam.kipp.event.Listeners
-import dev.triumphteam.kipp.event.listeners
+import dev.triumphteam.kipp.event.listen
 import dev.triumphteam.kipp.func.tokenFromFlag
-import dev.triumphteam.kipp.listener.logMessage
+import dev.triumphteam.kipp.listener.logMessages
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import java.io.File
@@ -40,8 +39,5 @@ fun JdaApplication.module() {
     install(Config)
     install(Database)
 
-    listeners {
-        register(Listeners::logMessage)
-    }
-
+    listen(JdaApplication::logMessages)
 }

@@ -9,14 +9,10 @@ class EventManager : IEventManager {
 
     private val listeners = ConcurrentHashMap<Class<out GenericEvent>, MutableList<EventExecutor<in GenericEvent>>>()
 
-    inline fun <reified E : GenericEvent> register(noinline listener: E.() -> Unit) {
-        addListener(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
-    }
-
     override fun handle(event: GenericEvent) {
         val executors = listeners[event::class.java] ?: return
-        executors.forEach { executor ->
-            executor.execute(event)
+        executors.forEach {
+            it.execute(event)
         }
     }
 
@@ -33,7 +29,7 @@ class EventManager : IEventManager {
         return listeners.entries.toList()
     }
 
-    fun addListener(executor: EventExecutor<*>) {
+    private fun addListener(executor: EventExecutor<*>) {
         with(executor.eventClass) {
             val executors = listeners[this] ?: mutableListOf()
             executors.add(executor as EventExecutor<in GenericEvent>)
