@@ -1,4 +1,3 @@
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dev.triumphteam.helper.CoreFeature
 import dev.triumphteam.helper.CorePlatform
@@ -18,6 +17,7 @@ plugins {
     main.kotlin.srcDirs = main.java.srcDirs = ['src/main/kotlin']
     main.resources.srcDirs = ['resources']
 }*/
+
 
 dependencies {
     // TODO remove

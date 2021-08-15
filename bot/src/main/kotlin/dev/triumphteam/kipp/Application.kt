@@ -8,6 +8,11 @@ import dev.triumphteam.kipp.database.Database
 import dev.triumphteam.kipp.event.listen
 import dev.triumphteam.kipp.func.tokenFromFlag
 import dev.triumphteam.kipp.listener.logMessages
+import dev.triumphteam.kipp.scheduler.MINUTES_TILL_MIDNIGHT
+import dev.triumphteam.kipp.scheduler.Scheduler
+import dev.triumphteam.kipp.scheduler.checkOldMessages
+import dev.triumphteam.kipp.scheduler.hours
+import dev.triumphteam.kipp.scheduler.repeatingTask
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import java.io.File
@@ -38,6 +43,9 @@ fun main(args: Array<String>) {
 fun JdaApplication.module() {
     install(Config)
     install(Database)
+    install(Scheduler)
 
     listen(JdaApplication::logMessages)
+
+    repeatingTask(period = hours(24), delay = MINUTES_TILL_MIDNIGHT, task = ::checkOldMessages)
 }
