@@ -1,15 +1,25 @@
 package dev.triumphteam.kipp.scheduler
 
+import dev.triumphteam.jda.JdaApplication
 import dev.triumphteam.kipp.database.Messages
-import dev.triumphteam.kipp.func.log
+import dev.triumphteam.kipp.func.kippInfo
+import net.dv8tion.jda.api.entities.Activity
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.TimeUnit
 
-fun checkOldMessages() {
+fun JdaApplication.checkOldMessages() {
     transaction {
-        log { "Deleting old messages." }
-        Messages.deleteWhere { Messages.timestamp less (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30)) }
-        log { "Messages deleted." }
+        val deleted =
+            Messages.deleteWhere { Messages.timestamp less (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30)) }
+        kippInfo { "Deleted $deleted messages from database." }
+    }
+}
+
+fun JdaApplication.updatePresence() {
+    when ((0..2).random()) {
+        0 -> jda.presence.setPresence(Activity.watching("${jda.guilds.sumOf { it.members.size }} members"), false)
+        1 -> jda.presence.setPresence(Activity.playing("with your feelings"), false)
+        2 -> jda.presence.setPresence(Activity.watching("messages"), false)
     }
 }

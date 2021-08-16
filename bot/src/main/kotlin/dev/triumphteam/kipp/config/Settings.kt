@@ -13,7 +13,23 @@ object Settings : SettingsHolder {
     @Path("message-log-blacklisted-categories")
     val MESSAGE_LOG_BLACKLISTED_CATEGORIES = Property.create(listOf())
 
-    @Path("messages-channel")
-    val MESSAGES_CHANNEL = Property.create("")
+    @Path("channels")
+    val CHANNELS = Property.create(ChannelsHolder())
+
+    @Path("emojis")
+    val EMOJIS = Property.create(EmojiHolder())
+
+    @Path("leak-words")
+    val LEAK_WORDS = Property.create(emptyList())
 
 }
+
+data class ChannelsHolder(
+    var messages: String = "",
+    var kipp: String = "",
+    var leak: String = "",
+)
+
+data class EmojiHolder(
+    var paste: String = "",
+)

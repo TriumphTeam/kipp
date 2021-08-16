@@ -7,6 +7,7 @@ import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import java.awt.Color
+import java.net.URL
 
 fun tokenFromFlag(args: Array<String>): String {
     val cli = DefaultParser().parse(
@@ -29,3 +30,12 @@ fun String.toColor(): Color {
 
 fun TextChannel.queueMessage(message: Message) = sendMessage(message).queue()
 fun TextChannel.queueMessage(message: MessageEmbed) = sendMessageEmbeds(message).queue()
+fun Message.queueReply(message: Message) = reply(message).queue()
+fun Message.queueReply(message: MessageEmbed) = replyEmbeds(message).queue()
+
+fun URL.append(string: String) = if (this.path == null || "/raw" in this.path) this else URL(this, string + this.path)
+
+/**
+ * Makes the word plural if the count is not one
+ */
+fun String.plural(count: Int) = if (count != 1) plus("s") else this

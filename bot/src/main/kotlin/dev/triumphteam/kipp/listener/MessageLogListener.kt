@@ -19,7 +19,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * Logs messages into the database
  */
-fun JdaApplication.logMessages() {
+fun JdaApplication.messageListener() {
     val config = feature(Config)
 
     on<GuildMessageReceivedEvent> {
@@ -55,7 +55,7 @@ fun JdaApplication.logMessages() {
             footer("ID: ${author.id}")
         }
 
-        val messagesChannel = jda.getTextChannelById(config[Settings.MESSAGES_CHANNEL]) ?: return@on
+        val messagesChannel = jda.getTextChannelById(config[Settings.CHANNELS].messages) ?: return@on
         messagesChannel.queueMessage(embed)
     }
 
@@ -79,7 +79,7 @@ fun JdaApplication.logMessages() {
             footer("ID: ${author.id}")
         }
 
-        val messagesChannel = jda.getTextChannelById(config[Settings.MESSAGES_CHANNEL]) ?: return@on
+        val messagesChannel = jda.getTextChannelById(config[Settings.CHANNELS].messages) ?: return@on
         messagesChannel.queueMessage(embed)
     }
 }

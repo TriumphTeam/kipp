@@ -4,7 +4,7 @@ import dev.triumphteam.kipp.config.KippColor
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
-import java.time.LocalDateTime
+import java.time.Instant
 
 class Embed(user: User?, timestamp: Boolean) {
 
@@ -20,7 +20,7 @@ class Embed(user: User?, timestamp: Boolean) {
             embed.setFooter(footer, userImage)
         }
 
-        embed.setTimestamp(LocalDateTime.now())
+        embed.setTimestamp(Instant.now())
     }
 
     fun title(title: String): Embed {

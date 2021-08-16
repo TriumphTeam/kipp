@@ -18,7 +18,6 @@ plugins {
     main.resources.srcDirs = ['resources']
 }*/
 
-
 dependencies {
     // TODO remove
     implementation("com.sedmelluq:lavaplayer:1.3.77")

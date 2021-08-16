@@ -7,12 +7,16 @@ import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.database.Database
 import dev.triumphteam.kipp.event.listen
 import dev.triumphteam.kipp.func.tokenFromFlag
-import dev.triumphteam.kipp.listener.logMessages
+import dev.triumphteam.kipp.listener.messageListener
+import dev.triumphteam.kipp.listener.pasteListener
 import dev.triumphteam.kipp.scheduler.MINUTES_TILL_MIDNIGHT
 import dev.triumphteam.kipp.scheduler.Scheduler
 import dev.triumphteam.kipp.scheduler.checkOldMessages
 import dev.triumphteam.kipp.scheduler.hours
+import dev.triumphteam.kipp.scheduler.minutes
 import dev.triumphteam.kipp.scheduler.repeatingTask
+import dev.triumphteam.kipp.scheduler.seconds
+import dev.triumphteam.kipp.scheduler.updatePresence
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import java.io.File
@@ -45,7 +49,9 @@ fun JdaApplication.module() {
     install(Database)
     install(Scheduler)
 
-    listen(JdaApplication::logMessages)
+    listen(JdaApplication::messageListener)
+    listen(JdaApplication::pasteListener)
 
     repeatingTask(period = hours(24), delay = MINUTES_TILL_MIDNIGHT, task = ::checkOldMessages)
+    repeatingTask(period = minutes(2), delay = seconds(30), task = ::updatePresence)
 }
