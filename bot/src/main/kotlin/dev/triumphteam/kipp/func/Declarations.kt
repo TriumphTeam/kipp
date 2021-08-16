@@ -30,8 +30,9 @@ fun String.toColor(): Color {
 
 fun TextChannel.queueMessage(message: Message) = sendMessage(message).queue()
 fun TextChannel.queueMessage(message: MessageEmbed) = sendMessageEmbeds(message).queue()
-fun Message.queueReply(message: Message) = reply(message).queue()
-fun Message.queueReply(message: MessageEmbed) = replyEmbeds(message).queue()
+fun Message.queueReply(message: Message, mention: Boolean = false) = reply(message).mentionRepliedUser(mention).queue()
+fun Message.queueReply(message: MessageEmbed, mention: Boolean = false) =
+    replyEmbeds(message).mentionRepliedUser(mention).queue()
 
 fun URL.append(string: String) = if (this.path == null || "/raw" in this.path) this else URL(this, string + this.path)
 

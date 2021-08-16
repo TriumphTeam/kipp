@@ -40,6 +40,7 @@ fun JdaApplication.messageListener() {
         if (author.isBot) return@on
         if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return@on
         if (channel.parent?.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return@on
+        println(message.isSuppressedEmbeds)
 
         val oldMessage = transaction {
             Messages.select { Messages.id eq message.idLong }.firstOrNull()

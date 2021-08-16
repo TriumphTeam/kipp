@@ -26,13 +26,12 @@ class PasteScanner(private val config: Config) {
             color("#ffc180").title("Potential leak by ${message.author.asTag} has been detected!")
             color(KippColor.WARNING)
             description(
-                leaks.entries.joinToString("\n") { (index, line) ->
-                    """
-                        Line: `${index}`
-                        ```ini
-                        $line
-                        ```
-                    """.trimIndent()
+                buildString {
+                    append("```ini")
+                    append("\n")
+                    append(leaks.entries.joinToString("\n\n") { (index, line) -> "$index: $line" })
+                    append("\n")
+                    append("```")
                 }
             )
             field("Paste", originalLink.toString())
