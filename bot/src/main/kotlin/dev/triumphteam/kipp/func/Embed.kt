@@ -74,6 +74,11 @@ class Embed(user: User?, timestamp: Boolean) {
         return this
     }
 
+    fun thumbnail(user: User): Embed {
+        embed.setThumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
+        return this
+    }
+
     fun empty(): Embed {
         embed.addBlankField(false)
         return this

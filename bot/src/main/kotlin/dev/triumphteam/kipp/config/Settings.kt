@@ -1,6 +1,7 @@
 package dev.triumphteam.kipp.config
 
 import me.mattstudios.config.SettingsHolder
+import me.mattstudios.config.annotations.Name
 import me.mattstudios.config.annotations.Path
 import me.mattstudios.config.properties.Property
 
@@ -19,6 +20,9 @@ object Settings : SettingsHolder {
     @Path("emojis")
     val EMOJIS = Property.create(EmojiHolder())
 
+    @Path("roles")
+    val ROLES = Property.create(RolesHolder())
+
     @Path("leak-words")
     val LEAK_WORDS = Property.create(emptyList())
 
@@ -28,8 +32,15 @@ data class ChannelsHolder(
     var messages: String = "",
     var kipp: String = "",
     var leak: String = "",
+
+    @Name("join-leave")
+    var joinLeave: String = "",
 )
 
 data class EmojiHolder(
     var paste: String = "",
+)
+
+data class RolesHolder(
+    var member: String = "",
 )

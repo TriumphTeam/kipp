@@ -6,16 +6,12 @@ import dev.triumphteam.bukkit.feature.attribute.key
 import dev.triumphteam.bukkit.feature.featureOrNull
 import dev.triumphteam.bukkit.feature.install
 import dev.triumphteam.jda.JdaApplication
+import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.GenericEvent
 
 class Listeners(private val jdaApplication: JdaApplication) {
 
     val jda = jdaApplication.jda
-
-    @Suppress("UNCHECKED_CAST")
-    inline fun <reified E : GenericEvent> on(noinline listener: E.() -> Unit) {
-        jda.addEventListener(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
-    }
 
     fun register(listener: JdaApplication.() -> Unit) {
         listener(jdaApplication)
@@ -45,3 +41,8 @@ inline fun <reified E : GenericEvent> JdaApplication.on(noinline listener: E.() 
     jda.addEventListener(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
 }
 
+@TriumphDsl
+@Suppress("UNCHECKED_CAST")
+inline fun <reified E : GenericEvent> JDABuilder.on(noinline listener: E.() -> Unit) {
+    addEventListeners(EventExecutor(E::class.java, listener as GenericEvent.() -> Unit))
+}

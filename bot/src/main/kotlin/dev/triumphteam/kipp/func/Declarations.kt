@@ -1,5 +1,7 @@
 package dev.triumphteam.kipp.func
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.TextChannel
@@ -8,6 +10,8 @@ import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import java.awt.Color
 import java.net.URL
+
+val SCOPE = CoroutineScope(IO)
 
 fun tokenFromFlag(args: Array<String>): String {
     val cli = DefaultParser().parse(

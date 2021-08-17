@@ -40,7 +40,7 @@ fun JdaApplication.messageListener() {
         if (author.isBot) return@on
         if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return@on
         if (channel.parent?.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return@on
-        println(message.isSuppressedEmbeds)
+        if (message.isSuppressedEmbeds) return@on
 
         val oldMessage = transaction {
             Messages.select { Messages.id eq message.idLong }.firstOrNull()
@@ -56,8 +56,7 @@ fun JdaApplication.messageListener() {
             footer("ID: ${author.id}")
         }
 
-        val messagesChannel = jda.getTextChannelById(config[Settings.CHANNELS].messages) ?: return@on
-        messagesChannel.queueMessage(embed)
+        jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
     }
 
     on<GuildMessageDeleteEvent> {
@@ -80,7 +79,6 @@ fun JdaApplication.messageListener() {
             footer("ID: ${author.id}")
         }
 
-        val messagesChannel = jda.getTextChannelById(config[Settings.CHANNELS].messages) ?: return@on
-        messagesChannel.queueMessage(embed)
+        jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
     }
 }
