@@ -11,6 +11,7 @@ import dev.triumphteam.kipp.listener.guildListener
 import dev.triumphteam.kipp.listener.memberListener
 import dev.triumphteam.kipp.listener.messageListener
 import dev.triumphteam.kipp.listener.pasteListener
+import dev.triumphteam.kipp.listener.tempCommandListener
 import dev.triumphteam.kipp.scheduler.MINUTES_TILL_MIDNIGHT
 import dev.triumphteam.kipp.scheduler.Scheduler
 import dev.triumphteam.kipp.scheduler.checkOldMessages
@@ -52,6 +53,10 @@ fun JdaApplication.module() {
     listen(JdaApplication::pasteListener)
     listen(JdaApplication::guildListener)
     listen(JdaApplication::memberListener)
+    listen(JdaApplication::tempCommandListener)
+
+    // Temporary
+    jda.upsertCommand("about", "Information about Kipp").queue()
 
     repeatingTask(period = hours(24), delay = MINUTES_TILL_MIDNIGHT, task = ::checkOldMessages)
 }

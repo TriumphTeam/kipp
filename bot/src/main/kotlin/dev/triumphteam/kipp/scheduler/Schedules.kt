@@ -18,9 +18,11 @@ fun JdaApplication.checkOldMessages() {
 }
 
 fun JdaApplication.updatePresence(guild: Guild) {
-    when ((0..2).random()) {
+    jda.presence.setPresence(Activity.watching("${guild.members.size} members"), false)
+    // Add more later
+    /*when ((0..2).random()) {
         0 -> jda.presence.setPresence(Activity.watching("${guild.members.size} members"), false)
         1 -> jda.presence.setPresence(Activity.playing("with your feelings"), false)
         2 -> jda.presence.setPresence(Activity.watching("messages"), false)
-    }
+    }*/
 }

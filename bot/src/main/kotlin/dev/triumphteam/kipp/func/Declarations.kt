@@ -11,8 +11,6 @@ import org.apache.commons.cli.Options
 import java.awt.Color
 import java.net.URL
 
-val SCOPE = CoroutineScope(IO)
-
 fun tokenFromFlag(args: Array<String>): String {
     val cli = DefaultParser().parse(
         Options().apply {

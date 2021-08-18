@@ -5,16 +5,19 @@ import dev.triumphteam.jda.JdaApplication
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.event.on
-import dev.triumphteam.kipp.func.SCOPE
 import dev.triumphteam.kipp.func.kippInfo
 import dev.triumphteam.kipp.scheduler.minutes
 import dev.triumphteam.kipp.scheduler.repeatingTask
 import dev.triumphteam.kipp.scheduler.seconds
 import dev.triumphteam.kipp.scheduler.updatePresence
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
+
+private val scope = CoroutineScope(Default)
 
 fun JdaApplication.guildListener() {
     val config = feature(Config)
@@ -24,7 +27,7 @@ fun JdaApplication.guildListener() {
             updatePresence(guild)
         }
 
-        SCOPE.launch { checkMember(guild, config) }
+        scope.launch { checkMember(guild, config) }
     }
 }
 

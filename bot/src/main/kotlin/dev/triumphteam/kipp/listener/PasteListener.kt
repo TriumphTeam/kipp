@@ -31,7 +31,7 @@ private val pasteServices = listOf("pastebin.com", "hastebin.com", "paste.helpch
 
 // Pattern to identify URLs in the message
 private val urlPattern = Pattern.compile(
-    "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+    "(?:^|[\\W])((ht|f)tp(s?)://|www\\.)"
             + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+/?)*"
             + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]*$~@!:/{};']*)",
     Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
@@ -87,6 +87,9 @@ fun JdaApplication.pasteListener() {
  */
 private fun String.isPasteBin() = "pastebin" in this
 
+/**
+ * Creates a new paste from https://paste.helpch.at/
+ */
 private fun createPaste(text: String): String {
     // Turns the post data into byte array
     val postData = text.toByteArray(StandardCharsets.UTF_8)

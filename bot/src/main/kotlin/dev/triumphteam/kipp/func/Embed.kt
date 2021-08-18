@@ -99,6 +99,11 @@ class Embed(user: User?, timestamp: Boolean) {
         return this
     }
 
+    fun author(author: String, user: User): Embed {
+        embed.setAuthor(author, null, user.avatarUrl ?: user.defaultAvatarUrl)
+        return this
+    }
+
     fun author(author: User): Embed {
         embed.setAuthor(author.asTag, null, author.avatarUrl ?: author.defaultAvatarUrl)
         return this
