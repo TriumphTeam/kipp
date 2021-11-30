@@ -28,13 +28,13 @@ subprojects {
 
     dependencies {
         // Kotlin
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation(kotlin("stdlib"))
 
         // Logger
         implementation("ch.qos.logback:logback-classic:1.2.5")
 
         // JDA
-        implementation("net.dv8tion:JDA:4.3.0_307") {
+        implementation("net.dv8tion:JDA:5.0.0-alpha.1") {
             //exclude(module = "opus-java")
         }
     }
