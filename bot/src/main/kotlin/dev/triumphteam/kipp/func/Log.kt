@@ -1,7 +1,7 @@
 package dev.triumphteam.kipp.func
 
-import dev.triumphteam.bukkit.feature.feature
-import dev.triumphteam.jda.JdaApplication
+import dev.triumphteam.core.feature.feature
+import dev.triumphteam.core.jda.JdaApplication
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.KippColor
 import dev.triumphteam.kipp.config.Settings

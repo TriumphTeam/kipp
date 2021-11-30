@@ -1,20 +1,8 @@
 package dev.triumphteam.kipp.listener
 
-import dev.triumphteam.bukkit.feature.feature
-import dev.triumphteam.jda.JdaApplication
-import dev.triumphteam.kipp.config.Config
-import dev.triumphteam.kipp.config.KippColor
-import dev.triumphteam.kipp.event.on
-import dev.triumphteam.kipp.func.append
-import dev.triumphteam.kipp.func.embed
-import dev.triumphteam.kipp.func.plural
-import dev.triumphteam.kipp.func.queueReply
-import dev.triumphteam.kipp.scanner.PasteScanner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
@@ -37,7 +25,7 @@ private val urlPattern = Pattern.compile(
     Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
 )
 
-fun JdaApplication.pasteListener() {
+/*fun JdaApplication.pasteListener() {
     val config = feature(Config)
     val leakScanner = PasteScanner(config)
 
@@ -80,7 +68,7 @@ fun JdaApplication.pasteListener() {
             message.queueReply(embed)
         }
     }
-}
+}*/
 
 /**
  * Checks if the paste is pastebin

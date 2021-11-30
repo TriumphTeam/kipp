@@ -1,11 +1,10 @@
 package dev.triumphteam.kipp.scheduler
 
-import dev.triumphteam.bukkit.dsl.TriumphDsl
-import dev.triumphteam.bukkit.feature.ApplicationFeature
-import dev.triumphteam.bukkit.feature.attribute.key
-import dev.triumphteam.bukkit.feature.featureOrNull
-import dev.triumphteam.bukkit.feature.install
-import dev.triumphteam.jda.JdaApplication
+import dev.triumphteam.core.dsl.TriumphDsl
+import dev.triumphteam.core.feature.ApplicationFeature
+import dev.triumphteam.core.feature.attribute.key
+import dev.triumphteam.core.feature.feature
+import dev.triumphteam.core.jda.JdaApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,6 +12,7 @@ import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
 
 class Scheduler {
 
@@ -59,7 +59,7 @@ fun JdaApplication.repeatingTask(
     delay: Duration = period,
     task: () -> Unit
 ): Scheduler {
-    val scheduler = featureOrNull(Scheduler) ?: install(Scheduler)
-    scheduler.scheduleRepeatingTask(period.duration, delay.duration, TimeUnit.MILLISECONDS, task)
+    val scheduler = feature(Scheduler)
+    scheduler.scheduleRepeatingTask(period.inWholeMilliseconds, delay.inWholeMilliseconds, TimeUnit.MILLISECONDS, task)
     return scheduler
 }

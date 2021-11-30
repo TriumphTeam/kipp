@@ -1,25 +1,17 @@
 package dev.triumphteam.kipp.listener
 
-import dev.triumphteam.bukkit.feature.feature
-import dev.triumphteam.jda.JdaApplication
+import dev.triumphteam.core.jda.JdaApplication
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.Settings
-import dev.triumphteam.kipp.event.on
 import dev.triumphteam.kipp.func.kippInfo
-import dev.triumphteam.kipp.scheduler.minutes
-import dev.triumphteam.kipp.scheduler.repeatingTask
-import dev.triumphteam.kipp.scheduler.seconds
-import dev.triumphteam.kipp.scheduler.updatePresence
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 
 private val scope = CoroutineScope(Default)
 
-fun JdaApplication.guildListener() {
+/*fun JdaApplication.guildListener() {
     val config = feature(Config)
 
     on<GuildReadyEvent> {
@@ -29,7 +21,7 @@ fun JdaApplication.guildListener() {
 
         scope.launch { checkMember(guild, config) }
     }
-}
+}*/
 
 suspend fun JdaApplication.checkMember(guild: Guild, config: Config) {
     val memberRole = guild.getRoleById(config[Settings.ROLES].member) ?: return

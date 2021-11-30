@@ -1,17 +1,19 @@
 package dev.triumphteam.kipp.listener
 
-import dev.triumphteam.bukkit.feature.feature
-import dev.triumphteam.jda.JdaApplication
+import dev.triumphteam.core.feature.feature
+import dev.triumphteam.kipp.Kipp
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.KippColor
 import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.database.Messages
-import dev.triumphteam.kipp.event.on
 import dev.triumphteam.kipp.func.embed
 import dev.triumphteam.kipp.func.queueMessage
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent
+import net.dv8tion.jda.api.entities.ICategorizableChannel
+import net.dv8tion.jda.api.events.message.GenericMessageEvent
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageUpdateEvent
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,13 +21,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * Logs messages into the database
  */
-fun JdaApplication.messageListener() {
-    val config = feature(Config)
+class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
+    private val config = kipp.feature(Config)
 
-    on<GuildMessageReceivedEvent> {
-        if (author.isBot) return@on
-        if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return@on
-        if (channel.parent?.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return@on
+    override fun onMessageReceived(event: MessageReceivedEvent): Unit = with(event) {
+        if (author.isBot) return
+        if (isBlackListed(this)) return
 
         transaction {
             Messages.insertIgnore {
@@ -36,15 +37,14 @@ fun JdaApplication.messageListener() {
         }
     }
 
-    on<GuildMessageUpdateEvent> {
-        if (author.isBot) return@on
-        if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return@on
-        if (channel.parent?.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return@on
-        if (message.isSuppressedEmbeds) return@on
+    override fun onMessageUpdate(event: MessageUpdateEvent): Unit = with(event) {
+        if (author.isBot) return
+        if (isBlackListed(this)) return
+        if (message.isSuppressedEmbeds) return
 
         val oldMessage = transaction {
             Messages.select { Messages.id eq message.idLong }.firstOrNull()
-        } ?: return@on
+        } ?: return
 
         val embed = embed {
             color(KippColor.EDIT)
@@ -59,16 +59,15 @@ fun JdaApplication.messageListener() {
         jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
     }
 
-    on<GuildMessageDeleteEvent> {
-        if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return@on
-        if (channel.parent?.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return@on
+    override fun onMessageDelete(event: MessageDeleteEvent): Unit = with(event) {
+        if (isBlackListed(this)) return
 
         val message = transaction {
             Messages.select { Messages.id eq messageIdLong }.firstOrNull()
-        } ?: return@on
+        } ?: return
 
-        val author = jda.getUserById(message[Messages.sender]) ?: return@on
-        if (author.isBot) return@on
+        val author = jda.getUserById(message[Messages.sender]) ?: return
+        if (author.isBot) return
 
         val embed = embed {
             color(KippColor.FAIL)
@@ -81,4 +80,16 @@ fun JdaApplication.messageListener() {
 
         jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
     }
+
+    private fun isBlackListed(event: GenericMessageEvent): Boolean = with(event) {
+        if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return false
+
+        if (channel is ICategorizableChannel) {
+            // Weird ass not smart cast issue
+            if ((channel as ICategorizableChannel).parentCategoryId in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return false
+        }
+
+        return true
+    }
+
 }

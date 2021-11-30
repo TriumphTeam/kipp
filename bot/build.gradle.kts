@@ -35,6 +35,7 @@ dependencies {
     implementation(core(CorePlatform.JDA, "2.0.1-SNAPSHOT"))
     implementation(feature(CoreFeature.CONFIG, "2.0.1-SNAPSHOT"))
     implementation(feature("feature-jda-commands", "2.0.1-SNAPSHOT"))
+    implementation(feature("feature-jda-listeners", "2.0.1-SNAPSHOT"))
 
     // Google's shit
     implementation("com.google.cloud:google-cloud-dialogflow:2.0.0")

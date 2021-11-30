@@ -1,6 +1,6 @@
 package dev.triumphteam.kipp.scheduler
 
-import dev.triumphteam.jda.JdaApplication
+import dev.triumphteam.core.jda.JdaApplication
 import dev.triumphteam.kipp.database.Messages
 import dev.triumphteam.kipp.func.kippInfo
 import net.dv8tion.jda.api.entities.Activity

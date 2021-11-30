@@ -1,9 +1,9 @@
 package dev.triumphteam.kipp.config
 
-import dev.triumphteam.bukkit.TriumphApplication
-import dev.triumphteam.bukkit.configuration.BaseConfig
-import dev.triumphteam.bukkit.configuration.ConfigFeature
-import dev.triumphteam.bukkit.feature.attribute.AttributeKey
+import dev.triumphteam.core.TriumphApplication
+import dev.triumphteam.core.configuration.BaseConfig
+import dev.triumphteam.core.configuration.ConfigFeature
+import dev.triumphteam.core.feature.attribute.AttributeKey
 import me.mattstudios.config.SettingsHolder
 import java.nio.file.Path
 

@@ -1,9 +1,11 @@
 package dev.triumphteam.kipp.database
 
 import com.zaxxer.hikari.HikariDataSource
-import dev.triumphteam.bukkit.feature.ApplicationFeature
-import dev.triumphteam.bukkit.feature.attribute.key
-import dev.triumphteam.jda.JdaApplication
+import dev.triumphteam.core.feature.ApplicationFeature
+import dev.triumphteam.core.feature.attribute.key
+import dev.triumphteam.core.jda.JdaApplication
+import dev.triumphteam.kipp.config.Config.Feature.key
+import dev.triumphteam.kipp.database.Database.Feature.key
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
