@@ -3,8 +3,8 @@ import dev.triumphteam.helper.implementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.30-RC"
-    kotlin("plugin.serialization") version "1.5.30-RC"
+    kotlin("jvm") version "1.6.0"
+    kotlin("plugin.serialization") version "1.6.0"
     id("me.mattstudios.triumph") version "0.2.3"
 }
 
