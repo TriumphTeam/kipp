@@ -28,12 +28,13 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.33.1")
     implementation("org.xerial:sqlite-jdbc:3.36.0")
 
-    // My stuff
+    // TODO: 11/29/2021 REMOVE
     implementation("me.mattstudios.utils:matt-framework-jda:1.1.9-BETA")
 
     // Triumph
-    implementation(core(CorePlatform.JDA, "2.0.0"))
-    implementation(feature(CoreFeature.CONFIG, "2.0.0"))
+    implementation(core(CorePlatform.JDA, "2.0.1-SNAPSHOT"))
+    implementation(feature(CoreFeature.CONFIG, "2.0.1-SNAPSHOT"))
+    implementation(feature("feature-jda-commands", "2.0.1-SNAPSHOT"))
 
     // Google's shit
     implementation("com.google.cloud:google-cloud-dialogflow:2.0.0")
