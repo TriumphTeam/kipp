@@ -9,9 +9,6 @@ plugins {
     id("me.mattstudios.triumph") version "0.2.6"
 }
 
-group = "dev.triumphteam"
-version = "1.0"
-
 allprojects {
     repositories {
         mavenCentral()
@@ -27,12 +24,17 @@ subprojects {
         plugin("me.mattstudios.triumph")
     }
 
+    group = "dev.triumphteam"
+    version = "1.0"
+
     dependencies {
         // Kotlin
         implementation(kotlin("stdlib"))
 
         // Logger
-        implementation("ch.qos.logback:logback-classic:1.2.5")
+        implementation("org.apache.logging.log4j:log4j-api:2.14.1")
+        implementation("org.apache.logging.log4j:log4j-core:2.14.1")
+        implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.14.1")
 
         // Triumph
         implementation(core(PlatformType.JDA, "2.0.1-SNAPSHOT"))
