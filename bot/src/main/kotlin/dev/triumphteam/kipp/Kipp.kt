@@ -10,13 +10,15 @@ import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.database.Database
 import dev.triumphteam.kipp.listener.MemberListener
 import dev.triumphteam.kipp.listener.MessageLogListener
-import dev.triumphteam.kipp.scheduler.MINUTES_TILL_MIDNIGHT
-import dev.triumphteam.kipp.scheduler.Scheduler
-import dev.triumphteam.kipp.scheduler.checkOldMessages
-import dev.triumphteam.kipp.scheduler.repeatingTask
+import dev.triumphteam.kipp.scheduler.EVERYDAY
+import dev.triumphteam.kipp.tasks.deleteOldMessages
+import dev.triumphteam.kipp.tasks.updatePresence
+import dev.triumphteam.scheduler.Scheduler
+import dev.triumphteam.scheduler.runTaskEvery
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.requests.GatewayIntent
-import kotlin.time.Duration.Companion.hours
+import java.time.LocalTime
+import kotlin.time.Duration.Companion.minutes
 
 private val INTENTS = listOf(
     GatewayIntent.GUILD_EMOJIS,
@@ -50,12 +52,16 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
             )
         }
 
-        repeatingTask(period = 24.hours, delay = MINUTES_TILL_MIDNIGHT, task = ::checkOldMessages)
+        runTaskEvery(EVERYDAY, LocalTime.MIDNIGHT, ::deleteOldMessages)
     }
 
     override fun onGuildReady(guild: Guild) {
         commands {
             register(guild, AboutCommand(jda))
+
+            runTaskEvery(20.minutes) {
+                updatePresence(guild)
+            }
         }
     }
 }

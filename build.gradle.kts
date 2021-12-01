@@ -1,11 +1,12 @@
-
+import dev.triumphteam.helper.PlatformType
+import dev.triumphteam.helper.core
 import dev.triumphteam.helper.implementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.0"
     kotlin("plugin.serialization") version "1.6.0"
-    id("me.mattstudios.triumph") version "0.2.3"
+    id("me.mattstudios.triumph") version "0.2.6"
 }
 
 group = "dev.triumphteam"
@@ -32,6 +33,9 @@ subprojects {
 
         // Logger
         implementation("ch.qos.logback:logback-classic:1.2.5")
+
+        // Triumph
+        implementation(core(PlatformType.JDA, "2.0.1-SNAPSHOT"))
 
         // JDA
         implementation("net.dv8tion:JDA:5.0.0-alpha.1") {

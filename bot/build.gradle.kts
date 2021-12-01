@@ -1,7 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import dev.triumphteam.helper.CoreFeature
-import dev.triumphteam.helper.CorePlatform
-import dev.triumphteam.helper.core
+import dev.triumphteam.helper.Feature
+import dev.triumphteam.helper.PlatformType
 import dev.triumphteam.helper.feature
 import dev.triumphteam.helper.implementation
 
@@ -24,18 +23,18 @@ dependencies {
 
     // Database stuff
     implementation("com.zaxxer:HikariCP:3.4.5")
-    implementation("org.jetbrains.exposed:exposed-core:0.33.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.33.1")
+    implementation("org.jetbrains.exposed:exposed-core:0.36.2")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
     implementation("org.xerial:sqlite-jdbc:3.36.0")
 
     // TODO: 11/29/2021 REMOVE
     implementation("me.mattstudios.utils:matt-framework-jda:1.1.9-BETA")
 
     // Triumph
-    implementation(core(CorePlatform.JDA, "2.0.1-SNAPSHOT"))
-    implementation(feature(CoreFeature.CONFIG, "2.0.1-SNAPSHOT"))
-    implementation(feature("feature-jda-commands", "2.0.1-SNAPSHOT"))
-    implementation(feature("feature-jda-listeners", "2.0.1-SNAPSHOT"))
+    implementation(feature(Feature.CONFIG, "2.0.1-SNAPSHOT"))
+    implementation(feature(Feature.SCHEDULER, "2.0.1-SNAPSHOT"))
+    implementation(feature(Feature.COMMANDS, PlatformType.JDA, "2.0.1-SNAPSHOT"))
+    implementation(feature(Feature.LISTENERS, PlatformType.JDA, "2.0.1-SNAPSHOT"))
 
     // Google's shit
     implementation("com.google.cloud:google-cloud-dialogflow:2.0.0")
