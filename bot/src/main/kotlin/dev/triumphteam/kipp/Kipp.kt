@@ -8,9 +8,10 @@ import dev.triumphteam.core.jda.commands.listeners
 import dev.triumphteam.kipp.commands.AboutCommand
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.database.Database
+import dev.triumphteam.kipp.func.EVERYDAY
+import dev.triumphteam.kipp.invites.InvitesHandler
 import dev.triumphteam.kipp.listener.MemberListener
 import dev.triumphteam.kipp.listener.MessageLogListener
-import dev.triumphteam.kipp.scheduler.EVERYDAY
 import dev.triumphteam.kipp.tasks.deleteOldMessages
 import dev.triumphteam.kipp.tasks.updatePresence
 import dev.triumphteam.scheduler.Scheduler
@@ -42,6 +43,7 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
         install(Database)
         install(Scheduler)
         install(SlashCommands)
+        install(InvitesHandler)
     }
 
     override fun onReady() {
@@ -53,15 +55,16 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
         }
 
         runTaskEvery(EVERYDAY, LocalTime.MIDNIGHT, ::deleteOldMessages)
+        runTaskEvery(2.minutes, task = ::updatePresence)
     }
 
     override fun onGuildReady(guild: Guild) {
         commands {
-            register(guild, AboutCommand(jda))
-
-            runTaskEvery(20.minutes) {
-                updatePresence(guild)
-            }
+            register(
+                guild,
+                AboutCommand(jda),
+            )
         }
+
     }
 }

@@ -7,7 +7,6 @@ import me.mattstudios.config.properties.Property
 
 object Settings : SettingsHolder {
 
-    //val DATABASE = Property.create()
     @Path("message-log-blacklisted-channels")
     val MESSAGE_LOG_BLACKLISTED_CHANNELS = Property.create(listOf())
 

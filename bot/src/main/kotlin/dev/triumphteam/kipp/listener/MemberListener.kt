@@ -7,8 +7,7 @@ import dev.triumphteam.kipp.config.KippColor
 import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.func.embed
 import dev.triumphteam.kipp.func.queueMessage
-import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.Invite
+import dev.triumphteam.kipp.invites.InvitesHandler
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
@@ -21,14 +20,14 @@ import kotlin.math.abs
 class MemberListener(kipp: Kipp) : ListenerAdapter() {
     private val config = kipp.feature(Config)
     private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-    private var invites = mutableListOf<Invite>()
+    private val invitesHandler = kipp.feature(InvitesHandler)
 
     override fun onGuildReady(event: GuildReadyEvent): Unit = with(event) {
         //invites = guild.retrieveInvites().complete()
     }
 
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent): Unit = with(event) {
-        val invite = guild.getLastInvite()
+        val invite = invitesHandler.getLastInvite(guild)
 
         guild.getRoleById(config[Settings.ROLES].member)?.let {
             guild.addRoleToMember(member, it).queue()
@@ -57,21 +56,6 @@ class MemberListener(kipp: Kipp) : ListenerAdapter() {
         }
 
         guild.getTextChannelById(config[Settings.CHANNELS].joinLeave)?.queueMessage(message)
-    }
-
-    /**
-     * Gets the invite used
-     */
-    private fun Guild.getLastInvite(): Invite? {
-        val newInvites = retrieveInvites().complete()
-
-        val invite = newInvites.find { invite ->
-            val foundInvite = invites.find { it.code == invite.code } ?: return@find false
-            return@find invite.uses > foundInvite.uses
-        }
-
-        invites = newInvites
-        return invite
     }
 
 }

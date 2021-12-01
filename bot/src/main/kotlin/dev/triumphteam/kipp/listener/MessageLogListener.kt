@@ -8,8 +8,8 @@ import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.database.Messages
 import dev.triumphteam.kipp.func.embed
 import dev.triumphteam.kipp.func.queueMessage
+import net.dv8tion.jda.api.entities.Channel
 import net.dv8tion.jda.api.entities.ICategorizableChannel
-import net.dv8tion.jda.api.events.message.GenericMessageEvent
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent
@@ -26,7 +26,7 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent): Unit = with(event) {
         if (author.isBot) return
-        if (isBlackListed(this)) return
+        if (isBlackListed(channel)) return
 
         transaction {
             Messages.insertIgnore {
@@ -39,7 +39,7 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
 
     override fun onMessageUpdate(event: MessageUpdateEvent): Unit = with(event) {
         if (author.isBot) return
-        if (isBlackListed(this)) return
+        if (isBlackListed(channel)) return
         if (message.isSuppressedEmbeds) return
 
         val oldMessage = transaction {
@@ -60,7 +60,7 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
     }
 
     override fun onMessageDelete(event: MessageDeleteEvent): Unit = with(event) {
-        if (isBlackListed(this)) return
+        if (isBlackListed(channel)) return
 
         val message = transaction {
             Messages.select { Messages.id eq messageIdLong }.firstOrNull()
@@ -81,15 +81,17 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
         jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
     }
 
-    private fun isBlackListed(event: GenericMessageEvent): Boolean = with(event) {
-        if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return false
+    /**
+     * Checks if the channel is blacklisted.
+     */
+    private fun isBlackListed(channel: Channel): Boolean {
+        if (channel.id in config[Settings.MESSAGE_LOG_BLACKLISTED_CHANNELS]) return true
 
         if (channel is ICategorizableChannel) {
-            // Weird ass not smart cast issue
-            if ((channel as ICategorizableChannel).parentCategoryId in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return false
+            if (channel.parentCategoryId in config[Settings.MESSAGE_LOG_BLACKLISTED_CATEGORIES]) return true
         }
 
-        return true
+        return false
     }
 
 }
