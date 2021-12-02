@@ -13,22 +13,18 @@ plugins {
 //mainClassName = "me.mattstudios.dev.triumphteam.kipp.MainKt"
 
 /*sourceSets {
-    main.kotlin.srcDirs = main.java.srcDirs = ['src/main/kotlin']
-    main.resources.srcDirs = ['resources']
+    main {
+        java.srcDir("src/main/kotlin")
+        resources.srcDir("src/main/resources")
+    }
 }*/
 
 dependencies {
-    // TODO remove
-    implementation("com.sedmelluq:lavaplayer:1.3.77")
-
     // Database stuff
     implementation("com.zaxxer:HikariCP:3.4.5")
     implementation("org.jetbrains.exposed:exposed-core:0.36.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
     implementation("org.xerial:sqlite-jdbc:3.36.0")
-
-    // TODO: 11/29/2021 REMOVE
-    implementation("me.mattstudios.utils:matt-framework-jda:1.1.9-BETA")
 
     // Triumph
     implementation(feature(Feature.CONFIG, "2.0.1-SNAPSHOT"))
@@ -37,16 +33,10 @@ dependencies {
     implementation(feature(Feature.LISTENERS, PlatformType.JDA, "2.0.1-SNAPSHOT"))
 
     // Google's shit
-    implementation("com.google.cloud:google-cloud-dialogflow:2.0.0")
-    implementation("com.google.cloud:google-cloud-storage:1.108.0")
     implementation("com.google.code.gson:gson:2.8.6")
 
     implementation("commons-validator:commons-validator:1.6")
     implementation("commons-cli:commons-cli:1.4")
-
-    implementation("com.google.api-client:google-api-client:1.30.4")
-    implementation("com.google.oauth-client:google-oauth-client-jetty:1.30.6")
-    implementation("com.google.apis:google-api-services-sheets:v4-rev581-1.25.0")
 }
 
 tasks {

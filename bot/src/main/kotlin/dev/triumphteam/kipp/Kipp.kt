@@ -2,13 +2,20 @@ package dev.triumphteam.kipp
 
 import dev.triumphteam.core.feature.install
 import dev.triumphteam.core.jda.JdaApplication
+import dev.triumphteam.core.jda.commands.PrefixedCommands
 import dev.triumphteam.core.jda.commands.SlashCommands
 import dev.triumphteam.core.jda.commands.commands
 import dev.triumphteam.core.jda.commands.listeners
-import dev.triumphteam.kipp.commands.AboutCommand
+import dev.triumphteam.core.jda.commands.prefixedCommands
+import dev.triumphteam.kipp.button.Buttons
+import dev.triumphteam.kipp.button.buttons
+import dev.triumphteam.kipp.buttons.GetRoleButtons
+import dev.triumphteam.kipp.commands.prefixed.IntroductionSetup
+import dev.triumphteam.kipp.commands.slash.AboutCommand
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.database.Database
 import dev.triumphteam.kipp.func.EVERYDAY
+import dev.triumphteam.kipp.func.registerDefaults
 import dev.triumphteam.kipp.invites.InvitesHandler
 import dev.triumphteam.kipp.listener.MemberListener
 import dev.triumphteam.kipp.listener.MessageLogListener
@@ -43,7 +50,9 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
         install(Database)
         install(Scheduler)
         install(SlashCommands)
+        install(PrefixedCommands)
         install(InvitesHandler)
+        install(Buttons)
     }
 
     override fun onReady() {
@@ -51,6 +60,20 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
             register(
                 MessageLogListener(kipp),
                 MemberListener(kipp),
+            )
+        }
+
+        prefixedCommands {
+            register(
+                IntroductionSetup(kipp),
+            )
+
+            registerDefaults()
+        }
+
+        buttons {
+            register(
+                GetRoleButtons(kipp),
             )
         }
 
@@ -65,6 +88,5 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
                 AboutCommand(jda),
             )
         }
-
     }
 }

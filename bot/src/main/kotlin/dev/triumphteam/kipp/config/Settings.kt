@@ -17,7 +17,7 @@ object Settings : SettingsHolder {
     val CHANNELS = Property.create(ChannelsHolder())
 
     @Path("emojis")
-    val EMOJIS = Property.create(EmojiHolder())
+    val EMOTES = Property.create(EmojiHolder())
 
     @Path("roles")
     val ROLES = Property.create(RolesHolder())
@@ -38,6 +38,8 @@ data class ChannelsHolder(
 
 data class EmojiHolder(
     var paste: String = "",
+    var matt: String = "",
+    var libs: String = "",
 )
 
 data class RolesHolder(

@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
 import java.time.Instant
 
-class Embed(user: User?, timestamp: Boolean) {
+class Embed(user: User? = null, timestamp: Boolean = false) {
 
     private val embed = EmbedBuilder()
     private var footer: String = ""

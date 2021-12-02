@@ -1,4 +1,4 @@
-package dev.triumphteam.kipp.commands
+package dev.triumphteam.kipp.commands.slash
 
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command

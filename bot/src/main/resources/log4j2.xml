@@ -9,20 +9,10 @@
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="org.eclipse.jetty" level="INFO">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="io.netty" level="INFO">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="com.zaxxer.hikari" level="INFO">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="net.dv8tion.jda" level="INFO">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="Exposed" level="INFO">
-            <AppenderRef ref="Console"/>
-        </Logger>
+        <Logger name="org.eclipse.jetty" level="INFO"/>
+        <Logger name="io.netty" level="INFO"/>
+        <Logger name="com.zaxxer.hikari" level="INFO"/>
+        <Logger name="net.dv8tion.jda" level="INFO"/>
+        <Logger name="Exposed" level="INFO"/>
     </Loggers>
 </Configuration>
