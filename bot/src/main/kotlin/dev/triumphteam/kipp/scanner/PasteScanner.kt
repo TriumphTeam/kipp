@@ -23,7 +23,8 @@ class PasteScanner(private val config: Config) {
         val channel = message.jda.getTextChannelById(config[Settings.CHANNELS].leak) ?: return false
 
         val embed = embed {
-            color("#ffc180").title("Potential leak by ${message.author.asTag} has been detected!")
+            color("#ffc180")
+            title("Potential leak by ${message.author.asTag} has been detected!")
             color(KippColor.WARNING)
             description(
                 buildString {
@@ -34,9 +35,12 @@ class PasteScanner(private val config: Config) {
                     append("```")
                 }
             )
-            field("Paste", originalLink.toString())
-            field("User", message.author.asMention)
-            field("Channel", "[**#${message.textChannel.name}**](${message.jumpUrl})")
+
+            fields {
+                field("Paste", originalLink.toString())
+                field("User", message.author.asMention)
+                field("Channel", "[**#${message.textChannel.name}**](${message.jumpUrl})")
+            }
         }
 
         channel.queueMessage(embed)

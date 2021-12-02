@@ -50,9 +50,13 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
             color(KippColor.EDIT)
             author(author)
             description("Message edited by ${author.asMention}")
-            field("**Before**:", oldMessage[Messages.content])
-            field("**after**:", message.contentRaw)
-            field("**Channel**:", "[**#${message.textChannel.name}**](${message.jumpUrl})")
+
+            fields {
+                field("**Before**:", oldMessage[Messages.content])
+                field("**after**:", message.contentRaw)
+                field("**Channel**:", "[**#${message.textChannel.name}**](${message.jumpUrl})")
+            }
+
             footer("ID: ${author.id}")
         }
 
@@ -73,8 +77,12 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
             color(KippColor.FAIL)
             author(author)
             description("Message sent by ${author.asMention} has been deleted.")
-            field("Message", message[Messages.content])
-            field("Channel", channel.asMention)
+
+            fields {
+                field("Message", message[Messages.content])
+                field("Channel", channel.asMention)
+            }
+
             footer("ID: ${author.id}")
         }
 

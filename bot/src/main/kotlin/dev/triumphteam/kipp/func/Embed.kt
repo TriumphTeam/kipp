@@ -4,122 +4,88 @@ import dev.triumphteam.kipp.config.KippColor
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
-import java.time.Instant
 
-class Embed(user: User? = null, timestamp: Boolean = false) {
+class Embed {
 
     private val embed = EmbedBuilder()
-    private var footer: String = ""
-    private val userImage = user?.avatarUrl ?: user?.defaultAvatarUrl
+    private val fields = Fields(embed)
 
     init {
         embed.setColor(KippColor.DEFAULT.code.toColor())
-
-        if (user != null) {
-            footer = "Requested by: ${user.asTag}"
-            embed.setFooter(footer, userImage)
-        }
-
-        embed.setTimestamp(Instant.now())
     }
 
-    fun title(title: String): Embed {
+    fun title(title: String) {
         embed.setTitle(title)
-        return this
     }
 
-    fun footer(footer: String): Embed {
-        embed.setFooter(footer)
-        return this
-    }
-
-    fun footer(footer: String, icon: String): Embed {
+    fun footer(footer: String, icon: String? = null) {
         embed.setFooter(footer, icon)
-        return this
     }
 
-    fun appendFooter(footer: String): Embed {
-        this.footer += footer
-        embed.setFooter(this.footer, userImage)
-        return this
+    fun footer(user: User) {
+        embed.setFooter("Requested by: ${user.asTag}", user.avatarUrl)
     }
 
-    fun color(hex: String): Embed {
+    fun fields(block: Fields.() -> Unit) {
+        block(fields)
+    }
+
+    fun color(hex: String) {
         embed.setColor(hex.toColor())
-        return this
     }
 
-    fun color(color: KippColor): Embed {
+    fun color(color: KippColor) {
         embed.setColor(color.code.toColor())
-        return this
     }
 
-    fun field(title: String, body: String): Embed {
-        embed.addField(title, body, false)
-        return this
-    }
-
-    fun field(field: MessageEmbed.Field): Embed {
-        embed.addField(field)
-        return this
-    }
-
-    fun field(title: String, body: String, inline: Boolean): Embed {
-        embed.addField(title, body, inline)
-        return this
-    }
-
-    fun thumbnail(url: String): Embed {
+    fun thumbnail(url: String) {
         embed.setThumbnail(url)
-        return this
     }
 
-    fun thumbnail(user: User): Embed {
-        embed.setThumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
-        return this
+    fun thumbnail(user: User) {
+        embed.setThumbnail(user.avatarUrl)
     }
 
-    fun empty(): Embed {
-        embed.addBlankField(false)
-        return this
-    }
-
-    fun image(url: String): Embed {
+    fun image(url: String) {
         embed.setImage(url)
-        return this
     }
 
-    fun author(author: String): Embed {
-        embed.setAuthor(author)
-        return this
-    }
-
-    fun author(author: String, image: String): Embed {
+    fun author(author: String, image: String? = null) {
         embed.setAuthor(author, null, image)
-        return this
     }
 
-    fun author(author: String, user: User): Embed {
-        embed.setAuthor(author, null, user.avatarUrl ?: user.defaultAvatarUrl)
-        return this
+    fun author(author: String, user: User) {
+        embed.setAuthor(author, null, user.avatarUrl)
     }
 
-    fun author(author: User): Embed {
-        embed.setAuthor(author.asTag, null, author.avatarUrl ?: author.defaultAvatarUrl)
-        return this
+    fun author(author: User) {
+        embed.setAuthor(author.asTag, null, author.avatarUrl)
     }
 
-    fun description(description: String): Embed {
+    fun description(description: String) {
         embed.setDescription(description)
-        return this
     }
 
     fun build(): MessageEmbed {
         return embed.build()
     }
-
 }
 
-inline fun embed(user: User? = null, timestamp: Boolean = false, builder: Embed.() -> Unit): MessageEmbed {
-    return Embed(user, timestamp).apply(builder).build()
+class Fields(private val embed: EmbedBuilder) {
+
+    fun field(title: String, body: String,  inline: Boolean = false) {
+        embed.addField(title, body, false)
+    }
+
+    fun field(field: MessageEmbed.Field) {
+        embed.addField(field)
+    }
+
+    fun empty(inline: Boolean = false) {
+        embed.addBlankField(inline)
+    }
+}
+
+inline fun embed(builder: Embed.() -> Unit): MessageEmbed {
+    return Embed().apply(builder).build()
 }

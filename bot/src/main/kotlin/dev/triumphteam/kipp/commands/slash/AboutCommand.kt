@@ -19,7 +19,7 @@ class AboutCommand(private val jda: JDA) : BaseCommand() {
     fun SlashSender.about() {
         val kipp = jda.selfUser
         val uptime = (System.currentTimeMillis() - startTime).formatTime()
-        val embed = embed(timestamp = false) {
+        val embed = embed {
             thumbnail(kipp.avatarUrl ?: kipp.defaultAvatarUrl)
             description(
                 """
@@ -28,8 +28,12 @@ class AboutCommand(private val jda: JDA) : BaseCommand() {
                 My source can be found [here](https://github.com/TriumphTeam/kipp)!
                 """.trimIndent()
             )
-            field("Status:", "<:online:718229424948117536> Operational", true)
-            field("Uptime:", uptime, true)
+
+            fields {
+                field("Status:", "<:online:718229424948117536> Operational", true)
+                field("Uptime:", uptime, true)
+            }
+
             footer("Created by: Matt#7079")
         }
 

@@ -37,9 +37,13 @@ class MemberListener(kipp: Kipp) : ListenerAdapter() {
             title("Member joined!")
             thumbnail(user)
             color(KippColor.SUCCESS)
-            field(user.asTag, member.asMention)
-            field("Invite:", "`${invite?.code}` by `${invite?.inviter?.asTag}`")
-            field("Account age:", abs(ChronoUnit.DAYS.between(LocalDateTime.now(), user.timeCreated)).toString())
+
+            fields {
+                field(user.asTag, member.asMention)
+                field("Invite:", "`${invite?.code}` by `${invite?.inviter?.asTag}`")
+                field("Account age:", abs(ChronoUnit.DAYS.between(LocalDateTime.now(), user.timeCreated)).toString())
+            }
+
             footer("ID: ${user.id}")
         }
 
@@ -51,7 +55,11 @@ class MemberListener(kipp: Kipp) : ListenerAdapter() {
             title("Member left!")
             thumbnail(user.avatarUrl ?: user.defaultAvatarUrl)
             color(KippColor.FAIL)
-            field(user.asTag, user.asMention)
+
+            fields {
+                field(user.asTag, user.asMention)
+            }
+
             footer(LocalDateTime.now().format(formatter))
         }
 

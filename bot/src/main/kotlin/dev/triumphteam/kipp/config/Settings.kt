@@ -44,4 +44,7 @@ data class EmojiHolder(
 
 data class RolesHolder(
     var member: String = "",
+    var matt: String = "",
+    var libs: String = "",
+    var extra: String = "",
 )

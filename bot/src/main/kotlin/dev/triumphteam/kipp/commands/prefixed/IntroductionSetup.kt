@@ -56,11 +56,17 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
     ): MessageEmbed {
         return embed {
             description("Hello peoples, this will be a message.")
-            field("Opt-in", "Placeholder shit.")
-            field("", "${libEmote.asMention} | **Plugins** - Soon:tm:.")
-            field("", "${extraEmote.asMention} | **Libraries** - Get pinged for library updates.")
-            field("", "${extraEmote.asMention} | **Extra** - Get pinged for other projects like our core or gradle plugin.")
-            field("", "${mattEmote.asMention} | **Matt** - Get access to Matt's chill corner")
+
+            fields {
+                field("Opt-in", "Placeholder shit.")
+                field("", "${libEmote.asMention} | **Plugins** - Soon:tm:.")
+                field("", "${extraEmote.asMention} | **Libraries** - Get pinged for library updates.")
+                field(
+                    "",
+                    "${extraEmote.asMention} | **Extra** - Get pinged for other projects like our core or gradle plugin."
+                )
+                field("", "${mattEmote.asMention} | **Matt** - Get access to Matt's chill corner")
+            }
         }
     }
 
