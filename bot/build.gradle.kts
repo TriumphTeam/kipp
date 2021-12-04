@@ -9,16 +9,6 @@ plugins {
     application
 }
 
-// TODO this
-//mainClassName = "me.mattstudios.dev.triumphteam.kipp.MainKt"
-
-/*sourceSets {
-    main {
-        java.srcDir("src/main/kotlin")
-        resources.srcDir("src/main/resources")
-    }
-}*/
-
 dependencies {
     // Database stuff
     implementation("com.zaxxer:HikariCP:3.4.5")
@@ -41,6 +31,10 @@ dependencies {
 
 tasks {
     withType<ShadowJar> {
-        archiveFileName.set("dev.triumphteam.kipp.jar")
+        archiveFileName.set("kipp.jar")
+    }
+
+    application {
+        mainClass.set("dev.triumphteam.kipp.MainKt")
     }
 }

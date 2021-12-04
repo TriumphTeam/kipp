@@ -22,8 +22,8 @@ class GetRoleButtons(kipp: Kipp, guild: Guild) : BaseButton() {
     private val config = kipp.feature(Config)
 
     private val roles = config[Settings.ROLES]
-    private val separator = guild.getRoleById(roles.separator)
 
+    private val separator = guild.getRoleById(roles.separator)
     //private val plugins = guild.getRoleById(roles.separator)
     private val libraries = guild.getRoleById(roles.libs)
     private val extra = guild.getRoleById(roles.extra)
