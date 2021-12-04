@@ -47,4 +47,5 @@ data class RolesHolder(
     var matt: String = "",
     var libs: String = "",
     var extra: String = "",
+    var separator: String = "",
 )

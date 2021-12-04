@@ -55,17 +55,31 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
         mattEmote: Emote,
     ): MessageEmbed {
         return embed {
-            description("Hello peoples, this will be a message.")
+            title("Welcome to the server!")
+            description(
+                """
+                    Please ensure you read the rules at <#717208301850460181>.
+                    
+                    Feel free to ask questions, stick around and chat, or interact with any of the buttons below to receive updates on some of our future projects.
+                    Enjoy your stay!
+                """.trimIndent()
+            )
 
             fields {
-                field("Opt-in", "Placeholder shit.")
-                field("", "${libEmote.asMention} | **Plugins** - Soon:tm:.")
-                field("", "${extraEmote.asMention} | **Libraries** - Get pinged for library updates.")
                 field(
-                    "",
-                    "${extraEmote.asMention} | **Extra** - Get pinged for other projects like our core or gradle plugin."
+                    "**Settings**",
+                    """
+                        Click on the buttons below to toggle which updates you want to receive or if you want to be part of a channel.
+                        
+                        🔷 | **Plugins** - Soon:tm:.
+                          
+                          ${extraEmote.asMention} | **Libraries** - Get pinged for library updates.
+                          
+                          ➕ | **Extra** - Get pinged for other projects like our core or gradle plugin.
+                          
+                          ${mattEmote.asMention} | **Matt** - Get access to Matt's chill corner.
+                    """.trimIndent()
                 )
-                field("", "${mattEmote.asMention} | **Matt** - Get access to Matt's chill corner")
             }
         }
     }
@@ -77,7 +91,7 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
     ): List<Component> {
         return listOf(
             Button.secondary("get-role-lib", Emoji.fromEmote(libEmote)),
-            Button.secondary("get-role-extra", Emoji.fromEmote(extraEmote)),
+            Button.secondary("get-role-extra", "➕"),
             Button.secondary("get-role-matt", Emoji.fromEmote(mattEmote))
         )
     }

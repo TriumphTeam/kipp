@@ -71,12 +71,6 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
             registerDefaults()
         }
 
-        buttons {
-            register(
-                GetRoleButtons(kipp),
-            )
-        }
-
         runTaskEvery(EVERYDAY, LocalTime.MIDNIGHT, ::deleteOldMessages)
         runTaskEvery(2.minutes, task = ::updatePresence)
     }
@@ -86,6 +80,12 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
             register(
                 guild,
                 AboutCommand(jda),
+            )
+        }
+
+        buttons {
+            register(
+                GetRoleButtons(kipp, guild),
             )
         }
     }
