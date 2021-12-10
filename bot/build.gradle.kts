@@ -35,6 +35,7 @@ tasks {
     }
 
     application {
-        mainClass.set("dev.triumphteam.kipp.MainKt")
+        mainClass.set("dev.triumphteam.kipp.ApplicationKt")
     }
+
 }

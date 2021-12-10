@@ -11,7 +11,8 @@ import dev.triumphteam.kipp.button.Buttons
 import dev.triumphteam.kipp.button.buttons
 import dev.triumphteam.kipp.buttons.GetRoleButtons
 import dev.triumphteam.kipp.commands.prefixed.IntroductionSetup
-import dev.triumphteam.kipp.commands.slash.AboutCommand
+import dev.triumphteam.kipp.commands.slash.DocCommand
+import dev.triumphteam.kipp.commands.slash.DocsCommand
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.database.Database
 import dev.triumphteam.kipp.func.EVERYDAY
@@ -64,11 +65,11 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
         }
 
         prefixedCommands {
+            registerDefaults()
+
             register(
                 IntroductionSetup(kipp),
             )
-
-            registerDefaults()
         }
 
         runTaskEvery(EVERYDAY, LocalTime.MIDNIGHT, ::deleteOldMessages)
@@ -79,7 +80,9 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
         commands {
             register(
                 guild,
-                AboutCommand(jda),
+                //AboutCommand(jda),
+                DocCommand(),
+                DocsCommand(),
             )
         }
 

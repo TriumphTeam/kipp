@@ -4,6 +4,7 @@ import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Optional
+import dev.triumphteam.cmd.core.annotation.Requirement
 import dev.triumphteam.cmd.prefixed.annotation.Prefix
 import dev.triumphteam.cmd.prefixed.sender.PrefixedSender
 import dev.triumphteam.core.feature.feature
@@ -25,6 +26,7 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
     private val config = kipp.feature(Config)
 
     @Default
+    @Requirement("admin")
     fun PrefixedSender.default(channel: TextChannel, @Optional messageId: Long?) {
         val emotes = config[Settings.EMOTES]
         val libEmote = guild.getEmoteById(emotes.libs) ?: return
@@ -32,20 +34,16 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
         val mattEmote = guild.getEmoteById(emotes.matt) ?: return
 
         if (messageId == null) {
-            channel.sendMessageEmbeds(
-                createMessage(libEmote, extraEmote, mattEmote)
-            ).setActionRow(
-                createActionRow(libEmote, extraEmote, mattEmote)
-            ).queue()
+            channel.sendMessageEmbeds(createMessage(libEmote, extraEmote, mattEmote))
+                .setActionRow(createActionRow(libEmote, extraEmote, mattEmote))
+                .queue()
             return
         }
 
         channel.retrieveMessageById(messageId).queue {
-            it.editMessageEmbeds(
-                createMessage(libEmote, extraEmote, mattEmote)
-            ).setActionRow(
-                createActionRow(libEmote, extraEmote, mattEmote)
-            ).queue()
+            it.editMessageEmbeds(createMessage(libEmote, extraEmote, mattEmote))
+                .setActionRow(createActionRow(libEmote, extraEmote, mattEmote))
+                .queue()
         }
     }
 
@@ -73,7 +71,7 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
                         
                         🔷 | **Plugins** - Soon:tm:.
                           
-                          ${extraEmote.asMention} | **Libraries** - Get pinged for library updates.
+                          ${libEmote.asMention} | **Libraries** - Get pinged for library updates.
                           
                           ➕ | **Extra** - Get pinged for other projects like our core or gradle plugin.
                           
