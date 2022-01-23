@@ -7,7 +7,6 @@ import dev.triumphteam.kipp.config.KippColor
 import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.database.Messages
 import dev.triumphteam.kipp.func.embed
-import dev.triumphteam.kipp.func.queueMessage
 import net.dv8tion.jda.api.entities.Channel
 import net.dv8tion.jda.api.entities.ICategorizableChannel
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent
@@ -60,7 +59,7 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
             footer("ID: ${author.id}")
         }
 
-        jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
+        jda.getTextChannelById(config[Settings.CHANNELS].messages)?.sendMessageEmbeds(embed)?.queue()
     }
 
     override fun onMessageDelete(event: MessageDeleteEvent): Unit = with(event) {
@@ -86,7 +85,7 @@ class MessageLogListener(kipp: Kipp) : ListenerAdapter() {
             footer("ID: ${author.id}")
         }
 
-        jda.getTextChannelById(config[Settings.CHANNELS].messages)?.queueMessage(embed)
+        jda.getTextChannelById(config[Settings.CHANNELS].messages)?.sendMessageEmbeds(embed)?.queue()
     }
 
     /**

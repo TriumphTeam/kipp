@@ -1,10 +1,5 @@
 package dev.triumphteam.kipp.func
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.MessageEmbed
-import net.dv8tion.jda.api.entities.TextChannel
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
@@ -29,12 +24,6 @@ fun String.toColor(): Color {
         Integer.valueOf(substring(5, 7), 16)
     )
 }
-
-fun TextChannel.queueMessage(message: Message) = sendMessage(message).queue()
-fun TextChannel.queueMessage(message: MessageEmbed) = sendMessageEmbeds(message).queue()
-fun Message.queueReply(message: Message, mention: Boolean = false) = reply(message).mentionRepliedUser(mention).queue()
-fun Message.queueReply(message: MessageEmbed, mention: Boolean = false) =
-    replyEmbeds(message).mentionRepliedUser(mention).queue()
 
 fun URL.append(string: String) = if (this.path == null || "/raw" in this.path) this else URL(this, string + this.path)
 

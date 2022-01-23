@@ -6,7 +6,6 @@ import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.KippColor
 import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.func.embed
-import dev.triumphteam.kipp.func.queueMessage
 import dev.triumphteam.kipp.invites.InvitesHandler
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
@@ -47,7 +46,7 @@ class MemberListener(kipp: Kipp) : ListenerAdapter() {
             footer("ID: ${user.id}")
         }
 
-        guild.getTextChannelById(config[Settings.CHANNELS].joinLeave)?.queueMessage(message)
+        guild.getTextChannelById(config[Settings.CHANNELS].joinLeave)?.sendMessageEmbeds(message)?.queue()
     }
 
     override fun onGuildMemberRemove(event: GuildMemberRemoveEvent): Unit = with(event) {
@@ -63,7 +62,7 @@ class MemberListener(kipp: Kipp) : ListenerAdapter() {
             footer(LocalDateTime.now().format(formatter))
         }
 
-        guild.getTextChannelById(config[Settings.CHANNELS].joinLeave)?.queueMessage(message)
+        guild.getTextChannelById(config[Settings.CHANNELS].joinLeave)?.sendMessageEmbeds(message)?.queue()
     }
 
 }

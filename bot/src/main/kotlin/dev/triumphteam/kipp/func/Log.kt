@@ -22,7 +22,7 @@ fun JdaApplication.kippLog(color: KippColor, message: () -> String) {
     val config = feature(Config)
     val kippChannel = jda.getTextChannelById(config[Settings.CHANNELS].kipp) ?: return
 
-    kippChannel.queueMessage(
+    kippChannel.sendMessageEmbeds(
         embed {
             description(
                 """
@@ -33,5 +33,5 @@ fun JdaApplication.kippLog(color: KippColor, message: () -> String) {
             )
             color(color)
         }
-    )
+    ).queue()
 }

@@ -4,7 +4,6 @@ import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.KippColor
 import dev.triumphteam.kipp.config.Settings
 import dev.triumphteam.kipp.func.embed
-import dev.triumphteam.kipp.func.queueMessage
 import net.dv8tion.jda.api.entities.Message
 import java.net.URL
 
@@ -43,7 +42,7 @@ class PasteScanner(private val config: Config) {
             }
         }
 
-        channel.queueMessage(embed)
+        channel.sendMessageEmbeds(embed).queue()
         return true
     }
 
