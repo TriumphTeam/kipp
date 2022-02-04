@@ -7,7 +7,7 @@ import dev.triumphteam.cmd.core.annotation.Optional
 import dev.triumphteam.cmd.core.annotation.Requirement
 import dev.triumphteam.cmd.prefixed.annotation.Prefix
 import dev.triumphteam.cmd.prefixed.sender.PrefixedSender
-import dev.triumphteam.core.feature.feature
+import dev.triumphteam.core.feature.get
 import dev.triumphteam.kipp.Kipp
 import dev.triumphteam.kipp.config.Config
 import dev.triumphteam.kipp.config.Settings
@@ -16,21 +16,21 @@ import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.TextChannel
-import net.dv8tion.jda.api.interactions.components.Button
-import net.dv8tion.jda.api.interactions.components.Component
+import net.dv8tion.jda.api.interactions.components.ItemComponent
+import net.dv8tion.jda.api.interactions.components.buttons.Button
 
 @Prefix("!")
 @Command("introduction")
-class IntroductionSetup(kipp: Kipp) : BaseCommand() {
+class IntroductionSetupCommand(kipp: Kipp) : BaseCommand() {
 
-    private val config = kipp.feature(Config)
+    private val config = kipp[Config]
 
     @Default
     @Requirement("admin")
     fun PrefixedSender.default(channel: TextChannel, @Optional messageId: Long?) {
         val emotes = config[Settings.EMOTES]
         val libEmote = guild.getEmoteById(emotes.libs) ?: return
-        val extraEmote = guild.getEmoteById(emotes.libs) ?: return
+        val extraEmote = guild.getEmoteById(emotes.triumph) ?: return
         val mattEmote = guild.getEmoteById(emotes.matt) ?: return
 
         if (messageId == null) {
@@ -71,11 +71,11 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
                         
                         🔷 | **Plugins** - Soon:tm:.
                           
-                          ${libEmote.asMention} | **Libraries** - Get pinged for library updates.
+                        ${libEmote.asMention} | **Libraries** - Get pinged for library updates.
                           
-                          ➕ | **Extra** - Get pinged for other projects like our core or gradle plugin.
+                        ${extraEmote.asMention} | **Extra** - Get pinged for other projects like our core or gradle plugin.
                           
-                          ${mattEmote.asMention} | **Matt** - Get access to Matt's chill corner.
+                        ${mattEmote.asMention} | **Matt** - Get access to Matt's chill corner.
                     """.trimIndent()
                 )
             }
@@ -86,7 +86,7 @@ class IntroductionSetup(kipp: Kipp) : BaseCommand() {
         libEmote: Emote,
         extraEmote: Emote,
         mattEmote: Emote,
-    ): List<Component> {
+    ): List<ItemComponent> {
         return listOf(
             Button.secondary("get-role-lib", Emoji.fromEmote(libEmote)),
             Button.secondary("get-role-extra", "➕"),

@@ -10,7 +10,9 @@ import dev.triumphteam.core.jda.commands.prefixedCommands
 import dev.triumphteam.kipp.button.Buttons
 import dev.triumphteam.kipp.button.buttons
 import dev.triumphteam.kipp.buttons.GetRoleButtons
-import dev.triumphteam.kipp.commands.prefixed.IntroductionSetup
+import dev.triumphteam.kipp.commands.prefixed.IntroductionSetupCommand
+import dev.triumphteam.kipp.commands.prefixed.ReleaseCommand
+import dev.triumphteam.kipp.commands.slash.AboutCommand
 import dev.triumphteam.kipp.commands.slash.DocCommand
 import dev.triumphteam.kipp.commands.slash.DocsCommand
 import dev.triumphteam.kipp.config.Config
@@ -68,7 +70,8 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
             registerDefaults()
 
             register(
-                IntroductionSetup(kipp),
+                IntroductionSetupCommand(kipp),
+                ReleaseCommand(kipp),
             )
         }
 
@@ -80,7 +83,7 @@ class Kipp(token: String) : JdaApplication(token, INTENTS) {
         commands {
             register(
                 guild,
-                //AboutCommand(jda),
+                AboutCommand(jda),
                 DocCommand(),
                 DocsCommand(),
             )

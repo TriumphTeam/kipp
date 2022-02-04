@@ -1,0 +1,28 @@
+message-log-blacklisted-channels: 
+- "620425476099538954"
+- "630019950844837898"
+message-log-blacklisted-categories: 
+- "716110571946115124"
+channels:
+  messages: "716110920073478206"
+  kipp: "876583312318148718"
+  leak: "716073209690062929"
+  join-leave: "712507606303899738"
+emojis:
+  paste: "719595432283734088"
+  matt: "718166858355703842"
+  libs: "718166039199744050"
+  triumph: "938894962555252757"
+roles:
+  member: "627931700537851937"
+  matt: "713929561603047466"
+  libs: "713929424269082684"
+  extra: "916533582221156403"
+  separator: "713927697679777802"
+leak-words: 
+- "leak"
+- "blackspigot"
+- "black spigot"
+- "black-spigot"
+- "crack"
+- "nulled"

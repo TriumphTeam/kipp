@@ -17,16 +17,20 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.36.0")
 
     // Triumph
-    implementation(feature(Feature.CONFIG, "2.0.1-SNAPSHOT"))
-    implementation(feature(Feature.SCHEDULER, "2.0.1-SNAPSHOT"))
-    implementation(feature(Feature.COMMANDS, PlatformType.JDA, "2.0.1-SNAPSHOT"))
-    implementation(feature(Feature.LISTENERS, PlatformType.JDA, "2.0.1-SNAPSHOT"))
+    implementation(feature(Feature.CONFIG, "2.0.2"))
+    implementation(feature(Feature.SCHEDULER, "2.0.2"))
+    implementation(feature(Feature.COMMANDS, PlatformType.JDA, "2.0.2"))
+    implementation(feature(Feature.LISTENERS, PlatformType.JDA, "2.0.2"))
 
     // Google's shit
     implementation("com.google.code.gson:gson:2.8.6")
 
     implementation("commons-validator:commons-validator:1.6")
     implementation("commons-cli:commons-cli:1.4")
+
+    implementation("io.ktor:ktor-client-cio:1.6.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("io.ktor:ktor-client-serialization:1.6.7")
 }
 
 tasks {

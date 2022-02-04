@@ -4,8 +4,8 @@ import dev.triumphteam.helper.implementation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
-    kotlin("plugin.serialization") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.serialization") version "1.6.10"
     id("me.mattstudios.triumph") version "0.2.6"
 }
 
@@ -14,6 +14,8 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven("https://m2.dv8tion.net/releases")
+        maven("https://repo.triumphteam.dev/releases/")
+        maven("https://repo.triumphteam.dev/snapshots/")
     }
 }
 
@@ -37,12 +39,7 @@ subprojects {
         implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.14.1")
 
         // Triumph
-        implementation(core(PlatformType.JDA, "2.0.1-SNAPSHOT"))
-
-        // JDA
-        implementation("net.dv8tion:JDA:5.0.0-alpha.1") {
-            //exclude(module = "opus-java")
-        }
+        implementation(core(PlatformType.JDA, "2.0.2"))
     }
 
     tasks {

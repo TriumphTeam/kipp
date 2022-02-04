@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.Role
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 
 @Button("get-role")
 @Defer(ephemeral = true)
@@ -32,7 +32,7 @@ class GetRoleButtons(kipp: Kipp, guild: Guild) : BaseButton() {
     private val roleList = setOf(libraries, extra, matt)
 
     @Button("matt")
-    fun ButtonClickEvent.getMattRole() {
+    fun ButtonInteractionEvent.getMattRole() {
         handleRole(
             matt,
             addText = "Welcome to Matt's chill corner!",
@@ -41,16 +41,16 @@ class GetRoleButtons(kipp: Kipp, guild: Guild) : BaseButton() {
     }
 
     @Button("lib")
-    fun ButtonClickEvent.getLibRole() {
+    fun ButtonInteractionEvent.getLibRole() {
         handleRole(libraries, "library")
     }
 
     @Button("extra")
-    fun ButtonClickEvent.getExtraRole() {
+    fun ButtonInteractionEvent.getExtraRole() {
         handleRole(extra, "extra")
     }
 
-    private fun ButtonClickEvent.handleRole(
+    private fun ButtonInteractionEvent.handleRole(
         role: Role?,
         updateType: String = "",
         addText: String = "",

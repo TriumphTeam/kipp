@@ -31,15 +31,17 @@ data class ChannelsHolder(
     var messages: String = "",
     var kipp: String = "",
     var leak: String = "",
-
-    @Name("join-leave")
-    var joinLeave: String = "",
+    @Name("join-leave") var joinLeave: String = "",
+    @Name("lib-updates") var libUpdates: String = "",
+    @Name("plugin-updates") var pluginUpdates: String = "",
+    @Name("extra-updates") var extraUpdates: String = "",
 )
 
 data class EmojiHolder(
     var paste: String = "",
     var matt: String = "",
     var libs: String = "",
+    var triumph: String = "",
 )
 
 data class RolesHolder(

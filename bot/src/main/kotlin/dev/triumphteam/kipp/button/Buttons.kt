@@ -5,7 +5,7 @@ import dev.triumphteam.core.feature.ApplicationFeature
 import dev.triumphteam.core.feature.attribute.key
 import dev.triumphteam.core.feature.feature
 import dev.triumphteam.core.jda.JdaApplication
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -36,8 +36,8 @@ class Buttons : ListenerAdapter() {
     /**
      * TODO: Maybe move this to a different class.
      */
-    override fun onButtonClick(event: ButtonClickEvent): Unit = with(event) {
-        val buttonId = button?.id ?: return
+    override fun onButtonInteraction(event: ButtonInteractionEvent): Unit = with(event) {
+        val buttonId = button.id ?: return
         val (key, value) = buttons.map { it.key to it.value }.firstOrNull { buttonId.startsWith(it.first) } ?: return
         val subId = buttonId.removePrefix(key).removePrefix("-")
 
@@ -87,8 +87,8 @@ private class ButtonHolder(val defer: Boolean, val ephemeral: Boolean) {
             val subButtonId = method.getAnnotation(Button::class.java)?.id ?: return@forEach
 
             val parameters = method.parameters
-            if (parameters.size != 1 && parameters.first().type != ButtonClickEvent::class.java) {
-                throw IllegalArgumentException("Button ${method.name} needs ${ButtonClickEvent::class.java.simpleName}} as a parameter.")
+            if (parameters.size != 1 && parameters.first().type != ButtonInteractionEvent::class.java) {
+                throw IllegalArgumentException("Button ${method.name} needs ${ButtonInteractionEvent::class.java.simpleName}} as a parameter.")
             }
 
             val deferAnnotation = method.getAnnotation(Defer::class.java)
@@ -99,7 +99,7 @@ private class ButtonHolder(val defer: Boolean, val ephemeral: Boolean) {
         }
     }
 
-    fun execute(id: String, event: ButtonClickEvent) = subButtons[id]?.execute(event)
+    fun execute(id: String, event: ButtonInteractionEvent) = subButtons[id]?.execute(event)
 }
 
 /**
@@ -112,7 +112,7 @@ private data class SubButton(
     private val ephemeral: Boolean
 ) {
 
-    fun execute(event: ButtonClickEvent) {
+    fun execute(event: ButtonInteractionEvent) {
         if (defer) event.deferReply(ephemeral).queue()
         method.invoke(baseButton, event)
     }
